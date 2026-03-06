@@ -8,22 +8,17 @@ on:
 jobs:
   monitor:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Setup Python
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-
     - name: Install dependencies
-      run: |
-        pip install feedparser requests python-dotenv pytz
-
+      run: pip install feedparser requests python-dotenv pytz
     - name: Run Logistics Monitor
       env:
-      run: |
-        python main.py
+        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
+        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
+      run: python main.py
       timeout-minutes: 3

@@ -20,11 +20,13 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install feedparser requests nltk schedule python-dotenv email-validator pytz beautifulsoup4
+        pip install feedparser requests python-dotenv pytz
         
     - name: Run Logistics Monitor
       env:
         LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
       run: |
         python main.py
+      timeout-minutes: 5

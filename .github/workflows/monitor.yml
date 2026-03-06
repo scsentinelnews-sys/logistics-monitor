@@ -1,34 +1,33 @@
-cat > .github/workflows/monitor.yml << 'EOF'
-name: Logistics Monitor
-
-on:
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
-
-jobs:
-  monitor:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        pip install feedparser requests python-dotenv pytz
-        
-    - name: Run Logistics Monitor
-      env:
-        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
-        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
-        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
-      run: |
-        python main.py
-      timeout-minutes: 3
-EOF
+rm .github/workflows/monitor.yml
+echo "name: Logistics Monitor" > .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "on:" >> .github/workflows/monitor.yml
+echo "  schedule:" >> .github/workflows/monitor.yml
+echo "    - cron: '0 * * * *'" >> .github/workflows/monitor.yml
+echo "  workflow_dispatch:" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "jobs:" >> .github/workflows/monitor.yml
+echo "  monitor:" >> .github/workflows/monitor.yml
+echo "    runs-on: ubuntu-latest" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    steps:" >> .github/workflows/monitor.yml
+echo "    - name: Checkout code" >> .github/workflows/monitor.yml
+echo "      uses: actions/checkout@v3" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    - name: Setup Python" >> .github/workflows/monitor.yml
+echo "      uses: actions/setup-python@v4" >> .github/workflows/monitor.yml
+echo "      with:" >> .github/workflows/monitor.yml
+echo "        python-version: '3.11'" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    - name: Install dependencies" >> .github/workflows/monitor.yml
+echo "      run: |" >> .github/workflows/monitor.yml
+echo "        pip install feedparser requests python-dotenv pytz" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    - name: Run Logistics Monitor" >> .github/workflows/monitor.yml
+echo "      env:" >> .github/workflows/monitor.yml
+echo "        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}" >> .github/workflows/monitor.yml
+echo "        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}" >> .github/workflows/monitor.yml
+echo "        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}" >> .github/workflows/monitor.yml
+echo "      run: |" >> .github/workflows/monitor.yml
+echo "        python main.py" >> .github/workflows/monitor.yml
+echo "      timeout-minutes: 3" >> .github/workflows/monitor.yml

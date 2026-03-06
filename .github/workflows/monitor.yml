@@ -1,3 +1,4 @@
+cat > .github/workflows/monitor.yml << 'EOF'
 name: Logistics Monitor
 
 on:
@@ -30,3 +31,4 @@ jobs:
       run: |
         python main.py
       timeout-minutes: 3
+EOF

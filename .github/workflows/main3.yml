@@ -1,3 +1,4 @@
+rm .github/workflows/main3.yml
 echo "name: Logistics Monitor" > .github/workflows/main3.yml
 echo "" >> .github/workflows/main3.yml
 echo "on:" >> .github/workflows/main3.yml
@@ -23,6 +24,10 @@ echo "      run: |" >> .github/workflows/main3.yml
 echo "        pip install feedparser requests nltk schedule python-dotenv email-validator pytz beautifulsoup4" >> .github/workflows/main3.yml
 echo "" >> .github/workflows/main3.yml
 echo "    - name: Run Logistics Monitor" >> .github/workflows/main3.yml
+cat .github/workflows/main3.yml
+git add .github/workflows/main3.yml
+git commit -m "Fix YAML syntax with proper indentation"
+git push origin main
 echo "      env:" >> .github/workflows/main3.yml
 echo "        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}" >> .github/workflows/main3.yml
 echo "        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}" >> .github/workflows/main3.yml

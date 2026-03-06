@@ -1,19 +1,33 @@
-echo "name: Logistics Monitor" > .github/workflows/monitor.yml
-echo "" >> .github/workflows/monitor.yml
-echo "on:" >> .github/workflows/monitor.yml
-echo "  schedule:" >> .github/workflows/monitor.yml
-echo "    - cron: '0 * * * *'" >> .github/workflows/monitor.yml
-echo "  workflow_dispatch:" >> .github/workflows/monitor.yml
-echo "" >> .github/workflows/monitor.yml
-echo "jobs:" >> .github/workflows/monitor.yml
-echo "  monitor:" >> .github/workflows/monitor.yml
-echo "    runs-on: ubuntu-latest" >> .github/workflows/monitor.yml
-echo "" >> .github/workflows/monitor.yml
-echo "    steps:" >> .github/workflows/monitor.yml
-echo "    - name: Checkout code" >> .github/workflows/monitor.yml
-echo "      uses: actions/checkout@v3" >> .github/workflows/monitor.yml
-echo "" >> .github/workflows/monitor.yml
-echo "    - name: Setup Python" >> .github/workflows/monitor.yml
-echo "      uses: actions/setup-python@v4" >> .github/workflows/monitor.yml
-echo "      with:" >> .github/workflows/monitor.yml
-echo "        python-version: '3.11'" >> .github/workflows/monitor.yml
+echo "name: Logistics Monitor" > .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "on:" >> .github/workflows/main1.yml
+echo "  schedule:" >> .github/workflows/main1.yml
+echo "    - cron: '0 * * * *'" >> .github/workflows/main1.yml
+echo "  workflow_dispatch:" >> .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "jobs:" >> .github/workflows/main1.yml
+echo "  monitor:" >> .github/workflows/main1.yml
+echo "    runs-on: ubuntu-latest" >> .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "    steps:" >> .github/workflows/main1.yml
+echo "    - name: Checkout code" >> .github/workflows/main1.yml
+echo "      uses: actions/checkout@v3" >> .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "    - name: Setup Python" >> .github/workflows/main1.yml
+echo "      uses: actions/setup-python@v4" >> .github/workflows/main1.yml
+echo "      with:" >> .github/workflows/main1.yml
+echo "        python-version: '3.11'" >> .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "    - name: Install dependencies" >> .github/workflows/main1.yml
+echo "      run: |" >> .github/workflows/main1.yml
+echo "        pip install feedparser requests nltk schedule python-dotenv email-validator pytz beautifulsoup4" >> .github/workflows/main1.yml
+echo "" >> .github/workflows/main1.yml
+echo "    - name: Run Logistics Monitor" >> .github/workflows/main1.yml
+echo "      env:" >> .github/workflows/main1.yml
+cat .github/workflows/main1.yml
+git add .github/workflows/main1.yml
+git commit -m "Fix GitHub Actions workflow with correct file name"
+git push origin main
+echo "        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}" >> .github/workflows/main1.yml
+echo "        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}" >> .github/workflows/main1.yml
+echo "      run: python main.py" >> .github/workflows/main1.yml

@@ -1,0 +1,19 @@
+echo "name: Logistics Monitor" > .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "on:" >> .github/workflows/monitor.yml
+echo "  schedule:" >> .github/workflows/monitor.yml
+echo "    - cron: '0 * * * *'" >> .github/workflows/monitor.yml
+echo "  workflow_dispatch:" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "jobs:" >> .github/workflows/monitor.yml
+echo "  monitor:" >> .github/workflows/monitor.yml
+echo "    runs-on: ubuntu-latest" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    steps:" >> .github/workflows/monitor.yml
+echo "    - name: Checkout code" >> .github/workflows/monitor.yml
+echo "      uses: actions/checkout@v3" >> .github/workflows/monitor.yml
+echo "" >> .github/workflows/monitor.yml
+echo "    - name: Setup Python" >> .github/workflows/monitor.yml
+echo "      uses: actions/setup-python@v4" >> .github/workflows/monitor.yml
+echo "      with:" >> .github/workflows/monitor.yml
+echo "        python-version: '3.11'" >> .github/workflows/monitor.yml

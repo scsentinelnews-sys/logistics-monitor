@@ -27,7 +27,7 @@ jobs:
       env:
         LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
-        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
+        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
       run: |
         python main.py
       timeout-minutes: 3

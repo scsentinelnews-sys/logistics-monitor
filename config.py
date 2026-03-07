@@ -25,5 +25,5 @@ EMAIL_CONFIG = {
 # Monitoring Configuration
 MONITORING_CONFIG = {
     'check_interval_minutes': 60,
-    'time_window_hours': 2
+    'time_window_hours': 6
 }

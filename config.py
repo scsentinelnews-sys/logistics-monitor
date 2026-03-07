@@ -1,95 +1,14 @@
-# RSS Feed Configuration - Complete Major Container Lines Coverage
+# RSS Feed Configuration - Simple URL Format
 RSS_SOURCES = {
-    # PROVEN WORKING SOURCES
-    'joc': {
-        'url': 'https://www.joc.com/rss.xml',
-        'keywords': ['container shipping', 'port congestion', 'freight', 'carrier', 'shipping lines', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'vessel', 'container'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Container Shipping'
-    },
-    'freightwaves': {
-        'url': 'https://www.freightwaves.com/feed/',
-        'keywords': ['freight', 'shipping', 'logistics', 'supply chain', 'rates', 'capacity', 'container', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Freight Markets'
-    },
-    'splash_247': {
-        'url': 'https://splash247.com/feed/',
-        'keywords': ['shipping', 'maritime', 'vessel', 'port', 'logistics', 'tanker', 'container', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'shipping lines'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Maritime News'
-    },
-    'hellenic_shipping': {
-        'url': 'https://www.hellenicshippingnews.com/feed/',
-        'keywords': ['tanker rates', 'charter rates', 'port delays', 'shipping lines', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'vessel', 'container'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Shipping Markets'
-    },
-    'cnbc': {
-        'url': 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
-        'keywords': ['container', 'shipping', 'logistics', 'freight rates', 'port', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Supply Chain'
-    },
-    'financial_times': {
-        'url': 'https://www.ft.com/rss/companies',
-        'keywords': ['container', 'shipping', 'logistics', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Business News'
-    },
-    'journal_of_commerce': {
-        'url': 'https://www.joc.com/containers/rss.xml',
-        'keywords': ['container', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'shipping lines', 'port congestion', 'carrier', 'vessel'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Container Shipping'
-    },
-    'lloyds_list': {
-        'url': 'https://www.lloydslist.com/rssfeed',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'shipping lines', 'port congestion'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Major Carrier Intelligence'
-    },
-    'the_loadstar': {
-        'url': 'https://theloadstar.com/feed/',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'shipping lines', 'port congestion'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Freight & Logistics'
-    },
-    'port_technology': {
-        'url': 'https://www.porttechnology.org/rss.xml',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'port', 'congestion', 'terminal'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Port Operations'
-    },
-    'american_shipper': {
-        'url': 'https://www.americanshipper.com/feed/',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'shipping lines'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'US Shipping'
-    },
-    'container_news': {
-        'url': 'https://www.container-mag.com/rss.xml',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'shipping lines', 'port'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Container News'
-    },
-    
-    # Middle East & Energy Sources
-    'arabian_oil_gas': {
-        'url': 'https://www.arabianoilandgas.com/rss.xml',
-        'keywords': ['UAE', 'Gulf', 'ADNOC', 'Borouge', 'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Middle East Energy'
-    },
-    'energy_voice': {
-        'url': 'https://www.energyvoice.com/feed/',
-        'keywords': ['MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL', 'carrier', 'vessel', 'container', 'UAE', 'Gulf'],
-        'exclude': ['killed', 'dead', 'casualties'],
-        'category': 'Energy Logistics'
-    }
+    'cnbc_supply_chain': 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
+    'financial_times': 'https://www.ft.com/rss/companies',
+    'reuters_business': 'https://www.reuters.com/rssFeed/business',
+    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
+    'joc': 'https://www.joc.com/rss.xml',
+    'freightwaves': 'https://www.freightwaves.com/feed/'
 }
 
-# Enhanced Borouge/ADNOC Relevance - Complete Major Carrier Coverage
+# Enhanced Borouge/ADNOC Relevance - Major Carrier Focus
 BOURUGE_RELEVANCE = {
     'regions': ['UAE', 'Gulf', 'Middle East', 'Strait of Hormuz', 'Arabian Gulf', 'Persian Gulf', 'Abu Dhabi', 'Dubai', 'Jebel Ali', 'Khalifa', 'Ruweis'],
     'operations': [
@@ -107,14 +26,8 @@ BOURUGE_RELEVANCE = {
     ],
     'companies': [
         'Borouge', 'ADNOC', 'Abu Dhabi National Oil Company', 'ADNOC Gas', 'Borouge Plastics', 'Borouge Polymers',
-        # COMPLETE MAJOR CONTAINER LINES - COMPREHENSIVE COVERAGE
-        'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS', 'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL',
-        # MAJOR REGIONAL CARRIERS
-        'X-Press Feeders', 'Sealand', 'Samskip', 'KMTC', 'RCL',
-        # MAJOR CHINESE CARRIERS
-        'Cosco', 'Hanjin', 'Wan Hai', 'FOCUS',
-        # MAJOR KOREAN CARRIERS
-        'HMM', 'KMTC', 'Yang Ming',
+        # MAJOR CONTAINER LINES - COMPREHENSIVE COVERAGE
+        'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS',
         'carrier', 'shipping line', 'container operator', 'vessel operator'
     ]
 }
@@ -129,7 +42,7 @@ EMAIL_CONFIG = {
 
 # Monitoring Configuration
 MONITORING_CONFIG = {
-    'check_interval_minutes': 60,
+    'check_interval_minutes': 30,
     'alert_window_hours': 6,
     'max_summary_length': 200
 }

@@ -7,7 +7,7 @@ from config import RSS_SOURCES, BOURUGE_RELEVANCE, MONITORING_CONFIG
 def fetch_and_filter_news():
     """Fetch and filter RSS news for Borouge/ADNOC relevance"""
     articles = []
-    time_threshold = datetime.now(pytz.UTC) - timedelta(hours=MONITORING_CONFIG['time_window_hours'])
+    time_threshold = datetime.now(pytz.UTC) - timedelta(hours=MONITORING_CONFIG['alert_window_hours'])
     
     for source_name, url in RSS_SOURCES.items():
         print(f"Fetching from {source_name}...")

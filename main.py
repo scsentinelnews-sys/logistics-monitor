@@ -10,12 +10,13 @@ sys.path.append('.')
 
 from rss_parser import fetch_and_filter_news
 from email_notifier import send_email
+from daily_summary import summary_tracker
 
 def main():
     """Main monitoring function"""
     print("🚢 Starting Logistics Monitor")
     print(f"📧 Email: {os.environ.get('LOGISTICS_EMAIL_USER', 'sc.sentinelnews@gmail.com')}")
-    print("📊 Monitoring 5 RSS sources for Borouge/ADNOC impact")
+    print("📊 Monitoring 6 RSS sources for Borouge/ADNOC impact")
     print("-" * 50)
     
     timestamp = datetime.now(pytz.UTC).strftime('[%Y-%m-%d %H:%M:%S.%f]')
@@ -23,6 +24,9 @@ def main():
     
     # Fetch and filter news
     articles = fetch_and_filter_news()
+    
+    # Log the run for daily summary
+    summary_tracker.log_run(len(articles))
     
     if articles:
         print(f"📧 Sending {len(articles)} critical alerts")

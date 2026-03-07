@@ -1,0 +1,40 @@
+name: Daily Summary Report
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Every day at 6 AM UTC
+  workflow_dispatch:
+
+jobs:
+  daily-summary:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install feedparser requests python-dotenv pytz
+        
+    - name: Send Daily Summary
+      env:
+        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
+        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
+      run: |
+        python -c "
+import sys
+sys.path.append('.')
+from daily_summary import summary_tracker
+
+print('📊 Sending daily summary report...')
+summary_tracker.send_daily_summary()
+print('✅ Daily summary completed')
+"
+      timeout-minutes: 3

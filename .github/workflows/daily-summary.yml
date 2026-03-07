@@ -28,13 +28,5 @@ jobs:
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
       run: |
-        python -c "
-import sys
-sys.path.append('.')
-from daily_summary import summary_tracker
-
-print('📊 Sending daily summary report...')
-summary_tracker.send_daily_summary()
-print('✅ Daily summary completed')
-"
+        python daily_summary_sender.py
       timeout-minutes: 3

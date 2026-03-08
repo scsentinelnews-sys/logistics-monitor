@@ -38,7 +38,7 @@ class RSSFeedParser:
                     'published': getattr(entry, 'published', ''),
                     'link': getattr(entry, 'link', ''),
                     'source': source_name,
-                    'category': 'Maritime Logistics'
+                    'category': 'Business News'
                 }
                 articles.append(article)
             
@@ -78,15 +78,6 @@ class RSSFeedParser:
             print(f"Error parsing date: {e}")
             return False
     
-    def passes_keyword_filter(self, article: Dict, source_config: Dict) -> bool:
-        """Check if article passes keyword filter"""
-        text = f"{article['title']} {article['summary']} {article['content']}".lower()
-        
-        has_inclusion = any(keyword.lower() in text for keyword in source_config['keywords'])
-        has_exclusion = any(exclude.lower() in text for exclude in source_config['exclude'])
-        
-        return has_inclusion and not has_exclusion
-    
     def is_borouge_relevant(self, article: Dict) -> bool:
         """Refined logic: Requires a Stakeholder AND an Operational Impact."""
         text = f"{article['title']} {article['summary']} {article['content']}".lower()
@@ -122,17 +113,13 @@ class RSSFeedParser:
         
         return is_actionable
     
-    def process_article(self, article: Dict, source_config: Dict) -> Optional[Dict]:
+    def process_article(self, article: Dict, category: str) -> Optional[Dict]:
         """Process a single article through all filters"""
         # Time window check
         if not self.is_within_time_window(article['published']):
             return None
         
-        # Keyword filter check
-        if not self.passes_keyword_filter(article, source_config):
-            return None
-        
-        # Borouge relevance check
+        # Borouge relevance check (precision targeting only)
         if not self.is_borouge_relevant(article):
             return None
         
@@ -143,7 +130,7 @@ class RSSFeedParser:
             'title': article['title'],
             'summary': summary,
             'source': article['source'],
-            'category': article['category'],
+            'category': category,
             'link': article['link'],
             'published': article['published']
         }
@@ -174,9 +161,12 @@ class RSSFeedParser:
             
             if articles:
                 for article in articles:
-                    processed = self.process_article(article, 'Maritime Logistics')
+                    processed = self.process_article(article, 'Business News')
                     if processed:
                         all_articles.append(processed)
+        
+        # Sort by publication date (most recent first)
+        all_articles.sort(key=lambda x: x['published'], reverse=True)
         
         return all_articles
     

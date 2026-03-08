@@ -38,7 +38,7 @@ class RSSFeedParser:
                     'published': getattr(entry, 'published', ''),
                     'link': getattr(entry, 'link', ''),
                     'source': source_name,
-                    'category': 'SVP Logistics Intelligence'
+                    'category': 'Logistics Intelligence'
                 }
                 articles.append(article)
             
@@ -242,7 +242,7 @@ class RSSFeedParser:
             
             if articles:
                 for article in articles:
-                    processed = self.process_article(article, 'SVP Logistics Intelligence')
+                    processed = self.process_article(article, 'Logistics Intelligence')
                     if processed:
                         all_articles.append(processed)
         

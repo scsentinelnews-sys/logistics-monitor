@@ -1,4 +1,4 @@
-# RSS Feed Configuration - SVP-Focused Logistics Intelligence
+# RSS Feed Configuration - Logistics Intelligence
 RSS_SOURCES = {
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
@@ -14,12 +14,10 @@ RSS_SOURCES = {
     'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
 }
 
-# Enhanced SVP-Focused Logistics Intelligence - Ensure Real Crises Are Caught
+# Enhanced Logistics Intelligence - Ensure Real Crises Are Caught
 BOURUGE_RELEVANCE = {
-    # Tier 1: Primary Stakeholders (SVP Decision Impact)
+    # Tier 1: Primary Stakeholders (Decision Impact)
     'entities': [
-        # Borouge/ADNOC Specific (Direct Impact)
-        'Borouge', 'ADNOC', 'Abu Dhabi National Oil Company', 'ADNOC Gas', 'Borouge Plastics', 'Borouge Polymers', 'L&S', 'Nimex',
         # Major Container Lines (Direct Impact on Operations)
         'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
         # Logistics & Shipping Terms (Direct Impact)
@@ -35,7 +33,7 @@ BOURUGE_RELEVANCE = {
     
     # Tier 2: Critical Locations (Operations Impact)
     'ports_routes': [
-        # UAE/Gulf Critical Locations (Direct Borouge Impact)
+        # Gulf Critical Locations (Direct Impact)
         'Khalifa Port', 'Jebel Ali', 'Ruways', 'Ruwais', 'Fujairah', 'Sohar',
         # Global Maritime Chokepoints (Supply Chain Impact)
         'Suez Canal', 'Strait of Hormuz', 'Bab el-Mandeb', 'Strait of Malacca', 'Panama Canal',
@@ -46,7 +44,7 @@ BOURUGE_RELEVANCE = {
         'Middle East', 'Gulf region', 'Red Sea', 'Cape of Good Hope', 'Indian Ocean', 'Mediterranean Sea'
     ],
     
-    # Tier 3: SVP Decision Triggers (Specific Impacts - Enhanced)
+    # Tier 3: Decision Triggers (Specific Impacts - Enhanced)
     'impact_events': [
         # Port Operations (Direct Impact)
         'congestion', 'port congestion', 'port closure', 'port suspension', 'port disruption',
@@ -87,7 +85,7 @@ BOURUGE_RELEVANCE = {
 EMAIL_CONFIG = {
     'recipient': 'sc.sentinelnews@gmail.com',
     'sender': 'sc.sentinelnews@gmail.com',
-    'subject_prefix': '🚢 SVP Logistics Alert - Borouge/ADNOC Impact Analysis',
+    'subject_prefix': '🚢 Logistics Alert - Impact Analysis',
     'max_items': 5
 }
 

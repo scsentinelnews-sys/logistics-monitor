@@ -47,7 +47,7 @@ class EmailNotifier:
         # Create HTML table
         html_table = self.create_html_table(articles)
         
-        # Email body with updated heading and category
+        # Email body with clean, professional content
         email_body = f"""
         <!DOCTYPE html>
         <html>
@@ -116,7 +116,7 @@ class EmailNotifier:
                 tr:hover {{
                     background-color: #e8f4f8;
                 }}
-                .article-link {{
+                .article-info {{
                     color: #666;
                     font-style: italic;
                     font-size: 0.9em;
@@ -187,7 +187,7 @@ class EmailNotifier:
                     <td style="vertical-align: top;">
                         <strong>{article['title']}</strong><br>
                         <small>{article['summary']}</small><br>
-                        <span class="article-link">Source: {article['source']}</span>
+                        <span class="article-info">Source: {article['source']}</span>
                     </td>
                     <td style="vertical-align: top;">{article['source'].title()}</td>
                 </tr>

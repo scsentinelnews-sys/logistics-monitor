@@ -148,10 +148,10 @@ class EmailNotifier:
             <body>
                 <h2>✅ Logistics Monitor Test Successful</h2>
                 <p>Your AI logistics monitoring system is now active and configured.</p>
-                <p>You will receive alerts when critical logistics news affecting Borouge/ADNOC operations is detected.</p>
+                <p>You will receive alerts when actionable logistics intelligence affecting Borouge/ADNOC operations is detected.</p>
                 <br>
                 <p><strong>System Status:</strong> Active</p>
-                <p><strong>Monitoring Sources:</strong> 11 optimized RSS sources including Bloomberg, Yahoo Finance, MarketWatch</p>
+                <p><strong>Monitoring Sources:</strong> 11 optimized RSS sources (CNBC, BBC, FT, Guardian, Bloomberg, Yahoo Finance, MarketWatch, JOC, Hellenic, ICIS, Splash247)</p>
                 <p><strong>Alert Window:</strong> Last {MONITORING_CONFIG['alert_window_hours']} hours</p>
             </body>
             </html>

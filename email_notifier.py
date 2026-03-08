@@ -81,7 +81,7 @@ class EmailNotifier:
                 {self.create_html_table(articles)}
                 
                 <h3>🎯 Operational Impact Summary</h3>
-                <p>This alert contains news items that may impact Borouge/ADNOC logistics operations including:</p>
+                <p>This alert contains CRITICAL logistics intelligence that directly impacts Borouge/ADNOC operations including:</p>
                 <ul>
                     <li>Shipping route disruptions in Gulf/Middle East region</li>
                     <li>Port congestion affecting petrochemical shipments</li>
@@ -91,9 +91,9 @@ class EmailNotifier:
                 
                 <p><strong>Recommended Actions:</strong></p>
                 <ul>
-                    <li>Review vessel schedules for potential delays</li>
-                    <li>Contact logistics partners for alternate routing options</li>
-                    <li>Monitor port status for operational continuity</li>
+                    <li>IMMEDIATE ACTION: Review vessel schedules and reroute cargo if delays exceed 48 hours</li>
+                    <li>IMMEDIATE ACTION: Contact logistics partners for alternate routing options and activate contingency plans</li>
+                    <li>IMMEDIATE ACTION: Monitor port status and implement operational continuity measures</li>
                 </ul>
             </div>
             

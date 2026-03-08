@@ -20,7 +20,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4
+        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4 lxml
         
     - name: Run Logistics Monitor
       env:

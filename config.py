@@ -1,10 +1,10 @@
-# RSS Feed Configuration - Precision Targeting
+# RSS Feed Configuration - Working Maritime Sources
 RSS_SOURCES = {
-    'maritime_executive': 'https://www.maritime-executive.com/pressreleases.rss',
-    'gcaptain': 'https://gcaptain.com/feed/',
-    'lloyds_list': 'https://www.lloydslist.com/rss/ports-and-logistics',
-    'the_maritime_standard': 'https://www.themaritimestandard.com/category/uae/feed/',
-    'joc_logistics': 'https://www.joc.com/rss.xml',
+    'freightwaves': 'https://www.freightwaves.com/feed/',
+    'reuters_business': 'https://www.reuters.com/rssFeed/business',
+    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
+    'cnbc_supply_chain': 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
+    'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
 }
 
 # Precision Targeting - SVP Actionable Intelligence
@@ -26,8 +26,8 @@ BOURUGE_RELEVANCE = {
     ],
     # Tier 4: The "Noise" Filter (Blacklist)
     'blacklist': [
-        'hero', 'award', 'biography', 'lifestyle', 'culture', 'tourism', 
-        'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech'
+        'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'lifestyle', 'culture', 'tourism', 
+        'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech', 'driving', 'economy', 'economic'
     ]
 }
 

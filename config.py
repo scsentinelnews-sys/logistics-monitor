@@ -12,6 +12,10 @@ RSS_SOURCES = {
     'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
     'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
+    'argus_media': 'https://www.argusmedia.com/en/rss',
+    'platts': 'https://www.spglobal.com/platts/en',
+    'oilprice': 'https://oilprice.net/feed/',
+    'freightwaves': 'https://www.freightwaves.com/feed/',
 }
 
 # SVP-Focused Logistics Intelligence - Refined Blacklist
@@ -40,10 +44,8 @@ BOURUGE_RELEVANCE = {
         # Global Maritime Chokepoints (Supply Chain Impact)
         'Suez Canal', 'Strait of Hormuz', 'Bab el-Mandeb', 'Strait of Malacca', 'Panama Canal',
         # Major Global Ports (Operations Impact)
-        'Singapore', 'Rotterdam', 'Sanghai', 'Ningbo', 'Hong Kong', 'Busan', 'L
-        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'V
-        'Virginia', 'Savannah', 'Genoa', 'Felixstowe', 'Le Havre',
-        'Southampton', 'Charleston', 'Savannah'
+        'Singapore', 'Rotterdam', 'Shanghai', 'Ningbo', 'Hong Kong', 'Busan', 'Los Angeles', 'Long Beach',
+        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah', 'Genoa', 'Felixstowe', 'Le Havre', 'Southampton', 'Charleston', 'Savannah'
     ],
     
     # Tier 3: SVP Decision Triggers (Specific Impacts)
@@ -75,9 +77,8 @@ BOURUGE_RELEVANCE = {
     'blacklist': [
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'lifestyle', 'culture', 'tourism', 
         'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech', 'celebrity', 'sports',
-        'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming', 'fashion',
-        'social media', 'venture capital', 'funding', 'investment banking', 'startup', 
-        'personal finance', 'consumer', 'technology', 'artificial intelligence'
+        'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming', 'fashion', 'food',
+        'social media', 'venture capital', 'funding', 'investment banking', 'startup', 'personal finance', 'technology'
     ]
 }
 

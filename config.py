@@ -1,24 +1,21 @@
-# RSS Feed Configuration - Comprehensive Global Logistics Coverage
+# RSS Feed Configuration - Working Open Access Sources
 RSS_SOURCES = {
-    # Tier 1: Major Business & News (High Access)
-    'reuters_business': 'https://www.reuters.com/rssFeed/business',
-    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
+    # Tier 1: Major Business & News (Working Sources)
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
+    'guardian_business': 'https://www.theguardian.com/business/rss',
+    'wall_street_journal': 'https://feeds.wsj.com/rss/world_news',
     
-    # Tier 2: Specialized Maritime Logistics (Try Multiple URLs)
+    # Tier 2: Available Maritime Sources
     'joc_container': 'https://www.joc.com/rss.xml',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
-    'freightwaves': 'https://www.freightwaves.com/feed/',
-    'splash247': 'https://splash247.com/feed/',
-    'lloyds_list': 'https://www.lloydslist.com/rssfeed',
-    
-    # Tier 3: Energy & Petrochemical (Borouge/ADNOC Focus)
-    'argus_energy': 'https://www.argusmedia.com/rss',
     'icis_energy': 'https://www.icis.com/rss/',
-    'energy_voice': 'https://www.energyvoice.com/feed/',
-    'arabian_oil_gas': 'https://www.arabianoilandgas.com/rss.xml',
+    'splash247': 'https://splash247.com/feed/',
+    
+    # Tier 3: Alternative Business Sources
+    'bloomberg_business': 'https://www.bloomberg.com/feed/business',
+    'reuters_alternative': 'https://feeds.reuters.com/news/wealth',
 }
 
 # Precision Targeting - Enhanced Borouge/ADNOC Global Logistics Intelligence

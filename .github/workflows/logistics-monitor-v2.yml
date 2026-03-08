@@ -1,9 +1,7 @@
 name: Logistics Monitor V2
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'  # Every 30 minutes
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger only
 
 jobs:
   monitor:
@@ -29,15 +27,15 @@ jobs:
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
         GITHUB_ACTIONS: "true"
       run: |
-        echo "🤖 Starting production logistics monitor at $(date)"
+        echo "🤖 Starting manual production logistics monitor at $(date)"
         echo "📧 Email configured for recipient"
         
         python main.py
         
-        echo "✅ Production monitor completed at $(date)"
+        echo "✅ Manual production monitor completed at $(date)"
         
     - name: Log Summary
       run: |
-        echo "📊 Summary: Logistics monitor completed successfully"
+        echo "📊 Summary: Manual logistics monitor completed successfully"
         echo "📧 Email will be sent only when real logistics intelligence is found"
         echo "🎯 No email = No real logistics crises (correct behavior)"

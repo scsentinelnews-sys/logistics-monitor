@@ -1,21 +1,21 @@
-# RSS Feed Configuration - Working Open Access Sources
+# RSS Feed Configuration - Enhanced Global Logistics Coverage
 RSS_SOURCES = {
     # Tier 1: Major Business & News (Working Sources)
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
     'guardian_business': 'https://www.theguardian.com/business/rss',
-    'wall_street_journal': 'https://feeds.wsj.com/rss/world_news',
     
-    # Tier 2: Available Maritime Sources
+    # Tier 2: Maritime & Logistics Sources
     'joc_container': 'https://www.joc.com/rss.xml',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
     'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
     
-    # Tier 3: Alternative Business Sources
-    'bloomberg_business': 'https://www.bloomberg.com/feed/business',
-    'reuters_alternative': 'https://feeds.reuters.com/news/wealth',
+    # Tier 3: Additional Business Sources
+    'reuters_world': 'https://feeds.reuters.com/news/world',
+    'associated_press': 'https://feeds.apnews.com/rss/apf-topnews',
+    'bloomberg_quint': 'https://www.bloombergquint.com/feed/',
 }
 
 # Precision Targeting - Enhanced Borouge/ADNOC Global Logistics Intelligence

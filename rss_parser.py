@@ -79,7 +79,7 @@ class RSSFeedParser:
             return False
     
     def is_borouge_relevant(self, article: Dict) -> bool:
-        """SVP Decision Logic: Target specific logistics impacts"""
+        """Decision Logic: Target specific logistics impacts"""
         # Use .get() to handle missing keys safely
         text = f"{article.get('title', '')} {article.get('summary', '')} {article.get('content', '')}".lower()
         
@@ -101,19 +101,19 @@ class RSSFeedParser:
         has_location = len(location_matches) > 0
         print(f"📍 Locations found: {location_matches}")
         
-        # 4. Check for SVP Decision Triggers (What)
+        # 4. Check for Decision Triggers (What)
         impact_matches = [i for i in BOURUGE_RELEVANCE['impact_events'] if i.lower() in text]
         has_impact = len(impact_matches) > 0
         print(f"💥 Impacts found: {impact_matches}")
         
-        # SVP DECISION RULE: 
+        # DECISION RULE: 
         # Must have BOTH Entity AND Impact OR Location AND Impact
         # This ensures actionable intelligence for decision making
-        is_svp_relevant = (has_entity and has_impact) or (has_location and has_impact)
+        is_relevant = (has_entity and has_impact) or (has_location and has_impact)
         
-        print(f"✅ SVP Relevant: {is_svp_relevant} (Entity+Impact: {has_entity and has_impact}, Location+Impact: {has_location and has_impact})")
+        print(f"✅ Relevant: {is_relevant} (Entity+Impact: {has_entity and has_impact}, Location+Impact: {has_location and has_impact})")
         
-        return is_svp_relevant
+        return is_relevant
     
     def process_article(self, article: Dict, category: str) -> Optional[Dict]:
         """Process a single article through all filters"""
@@ -121,12 +121,12 @@ class RSSFeedParser:
         if not self.is_within_time_window(article.get('published', '')):
             return None
         
-        # SVP relevance check
+        # Relevance check
         if not self.is_borouge_relevant(article):
             return None
         
-        # Create SVP-focused summary
-        summary = self.create_svp_summary(article.get('content', ''), article.get('title', ''))
+        # Create focused summary
+        summary = self.create_summary(article.get('content', ''), article.get('title', ''))
         
         return {
             'title': article.get('title', ''),
@@ -137,97 +137,62 @@ class RSSFeedParser:
             'published': article.get('published', '')
         }
     
-    def create_svp_summary(self, content: str, title: str) -> str:
-        """Create SVP-focused summary with specific decision-making facts"""
-        import re
+    def create_summary(self, content: str, title: str) -> str:
+        """Create focused summary with specific decision-making facts"""
+        # Simple, safe keyword-based summary creation
+        summary_parts = []
         
-        # SVP Decision Patterns - Specific Metrics and Facts
-        svp_patterns = [
-            # Financial Impact Patterns
-            r'\$\d+\s*(million|billion|thousand)\s*(loss|profit|cost|revenue)',
-            r'\d+\s*%\s*(increase|decrease|rise|fall|growth|drop)',
-            r'\$\d+\s*(per\s*(ton|container|TEU|FEU)',
-            r'\$\d+\s*(per\s*(day|week|month)',
-            r'freight\s+(rate|price|cost)\s+(up|down|increase|decrease|spike|surcharge)',
-            r'oil\s+(price|cost)\s+(up|down|spike|surge)',
-            r'polymer\s+(price|cost)\s+(up|down|spike|surge)',
-            r'feedstock\s+(price|cost)\s+(up|down|shortage)',
-            
-            # Operational Impact Patterns
-            r'(port|terminal)\s+(congestion|closure|shutdown|suspension)',
-            r'(delay|disruption|interruption)\s+(of|in|at)\s+(port|terminal)',
-            r'(strike|work\s*stoppage)\s+(affecting|impacting)',
-            r'(capacity|space|equipment)\s+(shortage|constraint|limitation)',
-            r'(customs|inspection)\s+(delay|backlog|clearance)',
-            r'(bottleneck|overcapacity)\s+(at|in)\s+(port|terminal)',
-            
-            # Shipping Line Patterns
-            r'(MAERSK|MSC|CMA CGM|Hapag-Lloyd|ONE|Evergreen|COSCO)\s+(delay|cancel|suspend|divert)',
-            r'(blank sailing|service\s*suspension|cancellation)',
-            r'(vessel|container\s+(collision|grounding|accident)',
-            
-            # Route Disruption Patterns
-            r'(Suez\s*Canal|Strait of Hormuz|Bab\s*el-Mandeb)\s+(block|closure|disruption)',
-            r'(Panama\s*Canal)\s+(blockage|closure|disruption)',
-            
-            # Time-Sensitive Patterns
-            r'(immediate|urgent|critical|emergency)\s+(action|required|needed)',
-            r'(effective|starting|beginning)\s+(today|tomorrow|now)',
-            r'(expected|estimated|projected)\s+(duration|timeline)',
-            r'(peak|seasonal|unprecedented)\s*(demand|volume)',
+        # Check for financial impact keywords
+        financial_keywords = [
+            'million', 'billion', 'dollar', 'cost', 'price', 'increase', 'decrease', 
+            'surge', 'spike', 'drop', 'loss', 'profit', 'revenue'
         ]
         
-        # Extract sentences with SVP decision patterns
-        sentences = re.split(r'(?<=[.!?])\s+', content)
-        svp_sentences = []
+        # Check for operational impact keywords
+        operational_keywords = [
+            'delay', 'disruption', 'congestion', 'closure', 'suspension', 'strike',
+            'shortage', 'bottleneck', 'backlog', 'port', 'terminal', 'container'
+        ]
         
+        # Check for shipping keywords
+        shipping_keywords = [
+            'maersk', 'msc', 'cma cgm', 'hapag-lloyd', 'one', 'evergreen', 'cosco',
+            'vessel', 'ship', 'tanker', 'carrier', 'shipping line'
+        ]
+        
+        # Check for location keywords
+        location_keywords = [
+            'suez canal', 'strait of hormuz', 'panama canal', 'middle east',
+            'khalifa port', 'jebel ali', 'singapore', 'rotterdam', 'shanghai'
+        ]
+        
+        # Extract sentences with key information
+        sentences = re.split(r'[.!?]+', content)
         for sentence in sentences:
             sentence = sentence.strip()
             if len(sentence) < 20:
                 continue
-                
-            # Check for SVP patterns
-            for pattern in svp_patterns:
-                if re.search(pattern, sentence, re.IGNORECASE):
-                    # Clean up the sentence
-                    cleaned = re.sub(r'\s+', ' ', sentence.strip())
-                    cleaned = re.sub(r'\.+$', '', cleaned)
-                    
-                    # Add to SVP sentences if not duplicate and meaningful
-                    if cleaned not in svp_sentences and len(cleaned) > 15:
-                        svp_sentences.append(cleaned)
+            
+            # Check if sentence contains important keywords
+            sentence_lower = sentence.lower()
+            has_financial = any(keyword in sentence_lower for keyword in financial_keywords)
+            has_operational = any(keyword in sentence_lower for keyword in operational_keywords)
+            has_shipping = any(keyword in sentence_lower for keyword in shipping_keywords)
+            has_location = any(keyword in sentence_lower for keyword in location_keywords)
+            
+            # Add sentence if it contains important information
+            if (has_financial or has_operational) and (has_shipping or has_location):
+                summary_parts.append(sentence)
+                if len(summary_parts) >= 2:  # Limit to 2 sentences
                     break
         
-        # Create SVP-focused summary
-        if svp_sentences:
-            # Take the most impactful sentences
-            summary = " | ".join(svp_sentences[:3])
+        # Create summary
+        if summary_parts:
+            summary = ' | '.join(summary_parts)
             if len(summary) > MONITORING_CONFIG['max_summary_length']:
                 summary = summary[:MONITORING_CONFIG['max_summary_length']] + "..."
         else:
             # Fallback to title with key entities
-            title_facts = []
-            title_patterns = [
-                r'(MAERSK|MSC|CMA CGM|Hapag-Lloyd|ONE|Evergreen|COSCO)',
-                r'(Suez Canal|Strait of Hormuz|Bab el-Mandeb)',
-                r'(Khalifa Port|Jebel Ali|Rotterdam|Singapore|Shanghai)',
-                r'\$\d+\s*(million|billion)',
-                r'\d+\s*%\s*(increase|decrease)',
-                r'\d+\s*(days|hours)\s*(delay|backlog)',
-            ]
-            
-            for pattern in title_patterns:
-                match = re.search(pattern, title, re.IGNORECASE)
-                if match:
-                    title_facts.append(match.group().strip())
-            
-            if title_facts:
-                svp_sentences = title_facts[:2]
-        
-        # Create final summary
-        if svp_sentences:
-            summary = " | ".join(svp_sentences)
-        else:
             summary = title[:MONITORING_CONFIG['max_summary_length']]
         
         return summary
@@ -252,18 +217,18 @@ class RSSFeedParser:
         return all_articles
     
     def fetch_and_filter_news(self) -> List[Dict]:
-        """Main function to fetch and filter SVP logistics intelligence"""
-        print("🚢 Starting SVP logistics intelligence fetch...")
+        """Main function to fetch and filter logistics intelligence"""
+        print("🚢 Starting logistics intelligence fetch...")
         
         # Fetch all articles and process them directly
         all_articles = self.fetch_all_feeds()
         
-        print(f"📊 Found {len(all_articles)} SVP-relevant articles")
+        print(f"📊 Found {len(all_articles)} relevant articles")
         
         return all_articles
 
 # Standalone function for easy import
 def fetch_and_filter_news() -> List[Dict]:
-    """Standalone function to fetch and filter SVP logistics intelligence"""
+    """Standalone function to fetch and filter logistics intelligence"""
     parser = RSSFeedParser()
     return parser.fetch_and_filter_news()

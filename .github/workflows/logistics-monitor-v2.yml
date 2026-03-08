@@ -1,0 +1,56 @@
+name: Logistics Monitor V2
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4
+        
+    - name: Run Production Monitor
+      env:
+        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
+        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
+      run: |
+        python -c "
+import sys
+sys.path.append('.')
+from rss_parser import fetch_and_filter_news
+from email_notifier import EmailNotifier
+import os
+
+print('🚢 Starting production logistics monitor...')
+
+# Fetch and filter news
+articles = fetch_and_filter_news()
+
+if articles:
+    print(f'📧 Found {len(articles)} actionable intelligence items - sending production email')
+    # Send production email with news table
+    notifier = EmailNotifier()
+    notifier.send_email(articles, os.getenv('LOGISTICS_EMAIL_USER'), os.getenv('LOGISTICS_EMAIL_PASSWORD'))
+else:
+    print('📭 No actionable intelligence found in last 6 hours - no email sent')
+print('✅ Production monitor completed')
+"
+        
+    - name: Handle failure
+      if: failure()
+      run: |
+        echo "Logistics monitor failed - check logs above"

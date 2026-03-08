@@ -22,46 +22,22 @@ jobs:
       run: |
         pip install feedparser requests schedule python-dotenv pytz beautifulsoup4
         
-    - name: Run Production Monitor with Debug
+    - name: Run Production Monitor
       env:
         LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
         GITHUB_ACTIONS: "true"
       run: |
-        echo "🤖 Starting production logistics monitor..."
-        echo "📧 Email user: $LOGISTICS_EMAIL_USER"
-        echo "📧 Email recipient: $LOGISTICS_EMAIL_RECIPIENT"
+        echo "🤖 Starting production logistics monitor at $(date)"
+        echo "📧 Email configured for: $LOGISTICS_EMAIL_RECIPIENT"
         
-        python -c "
-import sys
-sys.path.append('.')
-from rss_parser import fetch_and_filter_news
-from email_notifier import EmailNotifier
-import os
-
-print('🧪 Testing production system...')
-articles = fetch_and_filter_news()
-
-if articles:
-    print(f'📧 Found {len(articles)} articles - sending email')
-    
-    # Send the email
-    notifier = EmailNotifier()
-    success = notifier.send_email(articles, os.getenv('LOGISTICS_EMAIL_USER'), os.getenv('LOGISTICS_EMAIL_PASSWORD'))
-    
-    if success:
-        print('✅ Production email sent successfully!')
-    else:
-        print('❌ Production email failed')
-else:
-    print('📭 No articles found - no email sent')
-    print('✅ System working correctly - no real logistics crises')
-
-print('✅ Production monitor completed')
-"
+        python main.py
         
-    - name: Handle failure
-      if: failure()
+        echo "✅ Production monitor completed at $(date)"
+        
+    - name: Log Summary
       run: |
-        echo "Logistics monitor failed - check logs above"
+        echo "📊 Summary: Logistics monitor completed successfully"
+        echo "📧 Email will be sent only when real logistics intelligence is found"
+        echo "🎯 No email = No real logistics crises (correct behavior)"

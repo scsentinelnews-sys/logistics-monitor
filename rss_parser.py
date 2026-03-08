@@ -38,7 +38,7 @@ class RSSFeedParser:
                     'published': getattr(entry, 'published', ''),
                     'link': getattr(entry, 'link', ''),
                     'source': source_name,
-                    'category': 'Business News'
+                    'category': 'Maritime Logistics'
                 }
                 articles.append(article)
             
@@ -49,7 +49,7 @@ class RSSFeedParser:
             return None
     
     def is_within_time_window(self, published_date: str) -> bool:
-        """Check if article is within the 6-hour alert window"""
+        """Check if article is within the alert window"""
         try:
             date_formats = [
                 '%a, %d %b %Y %H:%M:%S %Z',
@@ -119,12 +119,12 @@ class RSSFeedParser:
         if not self.is_within_time_window(article['published']):
             return None
         
-        # Borouge relevance check (precision targeting only)
+        # Borouge relevance check
         if not self.is_borouge_relevant(article):
             return None
         
-        # Create operational summary
-        summary = self.create_operational_summary(article['content'], article['title'])
+        # Create impactful summary
+        summary = self.create_impactful_summary(article['content'], article['title'])
         
         return {
             'title': article['title'],
@@ -135,21 +135,94 @@ class RSSFeedParser:
             'published': article['published']
         }
     
-    def create_operational_summary(self, content: str, title: str) -> str:
-        """Prioritizes sentences containing 'action' triggers (%, days, delays)."""
-        action_patterns = [r'\d+%', r'\d+\s*days', r'delay', r'vessel', r'port', r'closed', r'suspended']
+    def create_impactful_summary(self, content: str, title: str) -> str:
+        """Create impactful, fact-based summary with specific details"""
+        import re
         
+        # Priority patterns for impactful content
+        impact_patterns = [
+            # Specific metrics and numbers
+            r'\d+\s*%\s*(increase|decrease|rise|fall|growth|drop)',
+            r'\$\d+\s*(million|billion|thousand)',
+            r'\d+\s*(days|hours|weeks|months)',
+            r'\d+\s*(containers|vessels|ships)',
+            r'\d+\s*(percent|%)',
+            
+            # Specific operational impacts
+            r'(port|terminal|facility)\s+(congestion|closure|shutdown|suspension)',
+            r'(delay|disruption|disruption|interruption)',
+            r'(strike|work stoppage|labor action)',
+            r'(capacity|space|equipment)\s+(shortage|constraint|limitation)',
+            r'(surcharge|fee|rate)\s+(increase|hike|addition)',
+            r'(accident|incident|collision|grounding)',
+            r'(weather|storm|typhoon|hurricane)\s+(disruption|damage)',
+            r'(customs|inspection|regulation)\s+(delay|backlog|clearance)',
+            
+            # Company-specific impacts
+            r'(MAERSK|MSC|CMA CGM|Hapag-Lloyd|ONE|Evergreen|COSCO)\s+(delay|cancel|suspend)',
+            r'(Suez Canal|Strait of Hormuz|Bab el-Mandeb)\s+(block|closure|disruption)',
+            r'(container|shipping|freight)\s+(rates|prices|costs)\s+(soar|spike|surge)',
+            
+            # Time-sensitive operations
+            r'(immediate|urgent|critical|emergency)\s+(action|required|needed)',
+            r'(effective|starting|beginning)\s+(today|tomorrow|now)',
+            r'(expected|estimated|projected)\s+(duration|timeline)',
+        ]
+        
+        # Extract sentences with impact
         sentences = re.split(r'(?<=[.!?])\s+', content)
-        action_sentences = []
+        impact_sentences = []
         
         for sentence in sentences:
-            if any(re.search(pattern, sentence.lower()) for pattern in action_patterns):
-                action_sentences.append(sentence.strip())
+            sentence = sentence.strip()
+            if len(sentence) < 20:  # Skip very short sentences
+                continue
+                
+            # Check for impact patterns
+            for pattern in impact_patterns:
+                if re.search(pattern, sentence, re.IGNORECASE):
+                    # Clean up the sentence
+                    cleaned = re.sub(r'\s+', ' ', sentence.strip())
+                    cleaned = re.sub(r'\.+$', '', cleaned)
+                    
+                    # Add to impactful sentences if not duplicate
+                    if cleaned not in impact_sentences and len(cleaned) > 20:
+                        impact_sentences.append(cleaned)
+                    break
         
-        if action_sentences:
-            return " | ".join(action_sentences[:2])
+        # If no impactful sentences found, try to extract key facts from title
+        if not impact_sentences:
+            title_facts = []
+            
+            # Look for specific facts in title
+            title_patterns = [
+                r'(MAERSK|MSC|CMA CGM|Hapag-Lloyd|ONE|Evergreen|COSCO)',
+                r'(Suez Canal|Strait of Hormuz|Bab el-Mandeb)',
+                r'(Khalifa Port|Jebel Ali|Rotterdam|Singapore|Shanghai)',
+                r'\$\d+\s*(million|billion)',
+                r'\d+\s*%\s*(increase|decrease)',
+                r'\d+\s*(days|hours)\s*(delay|backlog)',
+            ]
+            
+            for pattern in title_patterns:
+                match = re.search(pattern, title, re.IGNORECASE)
+                if match:
+                    title_facts.append(match.group().strip())
+            
+            if title_facts:
+                impact_sentences = title_facts[:2]  # Limit to 2 facts
         
-        return title[:200]
+        # Create impactful summary
+        if impact_sentences:
+            # Take the most impactful sentences
+            summary = " | ".join(impact_sentences[:3])  # Limit to 3 sentences
+            if len(summary) > MONITORING_CONFIG['max_summary_length']:
+                summary = summary[:MONITORING_CONFIG['max_summary_length']] + "..."
+        else:
+            # Fallback to title with key facts
+            summary = title[:MONITORING_CONFIG['max_summary_length']]
+        
+        return summary
     
     def fetch_all_feeds(self) -> List[Dict]:
         """Fetch and process all RSS feeds"""

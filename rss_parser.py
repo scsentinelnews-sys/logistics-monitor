@@ -80,9 +80,10 @@ class RSSFeedParser:
     
     def is_borouge_relevant(self, article: Dict) -> bool:
         """SVP Decision Logic: Target specific logistics impacts"""
-        text = f"{article['title']} {article['summary']} {article['content']}".lower()
+        # Use .get() to handle missing keys safely
+        text = f"{article.get('title', '')} {article.get('summary', '')} {article.get('content', '')}".lower()
         
-        print(f"🔍 Checking article: {article['title'][:50]}...")
+        print(f"🔍 Checking article: {article.get('title', 'No title')[:50]}...")
         
         # 1. Instant Discard if it contains Blacklisted words
         blacklist_matches = [word for word in BOURUGE_RELEVANCE['blacklist'] if word.lower() in text]
@@ -117,7 +118,7 @@ class RSSFeedParser:
     def process_article(self, article: Dict, category: str) -> Optional[Dict]:
         """Process a single article through all filters"""
         # Time window check
-        if not self.is_within_time_window(article['published']):
+        if not self.is_within_time_window(article.get('published', '')):
             return None
         
         # SVP relevance check
@@ -125,15 +126,15 @@ class RSSFeedParser:
             return None
         
         # Create SVP-focused summary
-        summary = self.create_svp_summary(article['content'], article['title'])
+        summary = self.create_svp_summary(article.get('content', ''), article.get('title', ''))
         
         return {
-            'title': article['title'],
+            'title': article.get('title', ''),
             'summary': summary,
-            'source': article['source'],
+            'source': article.get('source', ''),
             'category': category,
-            'link': article['link'],
-            'published': article['published']
+            'link': article.get('link', ''),
+            'published': article.get('published', '')
         }
     
     def create_svp_summary(self, content: str, title: str) -> str:

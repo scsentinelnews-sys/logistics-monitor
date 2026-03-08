@@ -2,8 +2,8 @@ name: Logistics Monitor
 
 on:
   schedule:
-    - cron: '/30 * * * *'
-  workflow_dispatch:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:  # Allow manual triggers
 
 jobs:
   monitor:
@@ -28,4 +28,26 @@ jobs:
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
       run: |
-        python main.py
+        python -c "
+import sys
+sys.path.append('.')
+from rss_parser import fetch_and_filter_news
+from email_notifier import EmailNotifier
+import os
+
+# Fetch and filter news
+articles = fetch_and_filter_news()
+
+if articles:
+    print(f'Found {len(articles)} actionable intelligence items')
+    # Send production email with news table
+    notifier = EmailNotifier()
+    notifier.send_email(articles, os.getenv('LOGISTICS_EMAIL_USER'), os.getenv('LOGISTICS_EMAIL_PASSWORD'))
+else:
+    print('No actionable intelligence found in last 6 hours')
+"
+        
+    - name: Handle failure
+      if: failure()
+      run: |
+        echo "Logistics monitor failed - check logs above"

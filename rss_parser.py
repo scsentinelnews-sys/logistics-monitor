@@ -91,22 +91,34 @@ class RSSFeedParser:
         """Refined logic: Requires a Stakeholder AND an Operational Impact."""
         text = f"{article['title']} {article['summary']} {article['content']}".lower()
         
+        print(f"🔍 Checking article: {article['title'][:50]}...")
+        
         # 1. Instant Discard if it contains Blacklisted words
-        if any(word.lower() in text for word in BOURUGE_RELEVANCE['blacklist']):
+        blacklist_matches = [word for word in BOURUGE_RELEVANCE['blacklist'] if word.lower() in text]
+        if blacklist_matches:
+            print(f"❌ BLACKLISTED: {blacklist_matches}")
             return False
         
         # 2. Check for Primary Entities (Who)
-        has_entity = any(e.lower() in text for e in BOURUGE_RELEVANCE['entities'])
+        entity_matches = [e for e in BOURUGE_RELEVANCE['entities'] if e.lower() in text]
+        has_entity = len(entity_matches) > 0
+        print(f"👥 Entities found: {entity_matches}")
         
         # 3. Check for Locations (Where)
-        has_location = any(l.lower() in text for l in BOURUGE_RELEVANCE['ports_routes'])
+        location_matches = [l for l in BOURUGE_RELEVANCE['ports_routes'] if l.lower() in text]
+        has_location = len(location_matches) > 0
+        print(f"📍 Locations found: {location_matches}")
         
         # 4. Check for Operational Impact (What)
-        has_impact = any(i.lower() in text for i in BOURUGE_RELEVANCE['impact_events'])
+        impact_matches = [i for i in BOURUGE_RELEVANCE['impact_events'] if i.lower() in text]
+        has_impact = len(impact_matches) > 0
+        print(f"💥 Impacts found: {impact_matches}")
         
         # SVP RULE: 
         # An article is relevant ONLY if it mentions (Entity + Impact) OR (Location + Impact)
         is_actionable = (has_entity and has_impact) or (has_location and has_impact)
+        
+        print(f"✅ Actionable: {is_actionable} (Entity+Impact: {has_entity and has_impact}, Location+Impact: {has_location and has_impact})")
         
         return is_actionable
     
@@ -169,10 +181,19 @@ class RSSFeedParser:
         return all_articles
     
     def fetch_and_filter_news(self) -> List[Dict]:
-        """Main function to fetch and filter news"""
-        articles = self.fetch_all_feeds()
+        """Main function to fetch and filter all news"""
+        all_articles = self.fetch_all_feeds()
         
-        # Sort by publication date (newest first)
-        articles.sort(key=lambda x: x.get('published', ''), reverse=True)
+        # Filter for Borouge/ADNOC relevance
+        filtered_articles = []
+        for article in all_articles:
+            if self.is_borouge_relevant(article):
+                filtered_articles.append(article)
         
-        return articles[:EMAIL_CONFIG['max_items']]
+        return filtered_articles
+
+# Standalone function for easy import
+def fetch_and_filter_news() -> List[Dict]:
+    """Standalone function to fetch and filter news"""
+    parser = RSSFeedParser()
+    return parser.fetch_and_filter_news()

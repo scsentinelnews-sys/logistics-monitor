@@ -19,11 +19,11 @@ class LogisticsMonitor:
         """Main monitoring function - check feeds and send alerts if needed"""
         print(f"[{datetime.now()}] Starting logistics monitoring check...")
         
-        # Fetch and filter articles using the new precision targeting method
+        # Fetch and filter articles using the precision targeting method
         articles = self.parser.fetch_and_filter_news()
         
         if articles:
-            print(f"Found {len(articles)} actionable intelligence items for Borouge/ADNOC operations")
+            print(f"Found {len(articles)} actionable intelligence items for operations")
             
             # Send email alert
             success = self.notifier.send_email(articles, self.email_user, self.email_password)
@@ -43,7 +43,7 @@ class LogisticsMonitor:
     
     def start_monitoring(self) -> None:
         """Start continuous monitoring with scheduled checks"""
-        print("🚢 Starting AI Logistics Monitor for Borouge/ADNOC")
+        print("🚢 Starting AI Logistics Monitor")
         print(f"📧 Alerts will be sent to: {EMAIL_CONFIG['recipient']}")
         print(f"⏰ Checking every {MONITORING_CONFIG['check_interval_minutes']} minutes")
         print(f"🎯 Alert window: Last {MONITORING_CONFIG['alert_window_hours']} hours")

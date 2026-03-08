@@ -151,7 +151,7 @@ class EmailNotifier:
                 <p>You will receive alerts when critical logistics news affecting Borouge/ADNOC operations is detected.</p>
                 <br>
                 <p><strong>System Status:</strong> Active</p>
-                <p><strong>Monitoring Sources:</strong> 5 specialized maritime RSS feeds</p>
+                <p><strong>Monitoring Sources:</strong> 11 optimized RSS sources including Bloomberg, Yahoo Finance, MarketWatch</p>
                 <p><strong>Alert Window:</strong> Last {MONITORING_CONFIG['alert_window_hours']} hours</p>
             </body>
             </html>

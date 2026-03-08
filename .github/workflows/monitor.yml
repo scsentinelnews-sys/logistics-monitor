@@ -2,8 +2,8 @@ name: Logistics Monitor
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Every hour at minute 0
-  workflow_dispatch:  # Allow manual triggers
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   monitor:
@@ -20,18 +20,12 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4 lxml
+        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4
         
     - name: Run Logistics Monitor
       env:
         LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
-        DEBUG_MODE: ${{ secrets.DEBUG_MODE }}
       run: |
         python main.py
-        
-    - name: Handle failure
-      if: failure()
-      run: |
-        echo "Logistics monitor failed - check logs above"

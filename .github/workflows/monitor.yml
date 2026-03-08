@@ -27,6 +27,7 @@ jobs:
         LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
         LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
+        DEBUG_MODE: ${{ secrets.DEBUG_MODE }}
       run: |
         python main.py
         

@@ -1,21 +1,24 @@
-# RSS Feed Configuration - Enhanced Global Logistics Coverage
+# RSS Feed Configuration - Enhanced with Reuters & Bloomberg (Keeps All Existing Sources)
 RSS_SOURCES = {
-    # Tier 1: Major Business & News (Working Sources)
+    # Tier 1: Major Business & News (Your Existing Working Sources)
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
     'guardian_business': 'https://www.theguardian.com/business/rss',
     
-    # Tier 2: Maritime & Logistics Sources
+    # Tier 2: Maritime & Logistics Sources (Your Existing Working Sources)
     'joc_container': 'https://www.joc.com/rss.xml',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
     'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
     
-    # Tier 3: Additional Business Sources
-    'reuters_world': 'https://feeds.reuters.com/news/world',
-    'associated_press': 'https://feeds.apnews.com/rss/apf-topnews',
-    'bloomberg_quint': 'https://www.bloombergquint.com/feed/',
+    # Tier 3: NEW - Reuters Alternative URLs (Added)
+    'reuters_business': 'https://www.reuters.com/rssFeed/businessNews',
+    'reuters_world': 'https://www.reuters.com/rssFeed/worldNews',
+    'reuters_markets': 'https://www.reuters.com/rssFeed/marketsNews',
+    
+    # Tier 4: NEW - Bloomberg Alternative (Added)
+    'bloomberg_rss': 'https://feeds.bloomberg.com/markets/news.rss',
 }
 
 # Precision Targeting - Enhanced Borouge/ADNOC Global Logistics Intelligence

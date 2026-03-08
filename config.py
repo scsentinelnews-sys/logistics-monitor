@@ -1,34 +1,33 @@
-# RSS Feed Configuration - Simple URL Format
+# RSS Feed Configuration - Precision Targeting
 RSS_SOURCES = {
-    'cnbc_supply_chain': 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
-    'financial_times': 'https://www.ft.com/rss/companies',
-    'reuters_business': 'https://www.reuters.com/rssFeed/business',
-    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
-    'joc': 'https://www.joc.com/rss.xml',
-    'freightwaves': 'https://www.freightwaves.com/feed/'
+    'maritime_executive': 'https://www.maritime-executive.com/pressreleases.rss',
+    'gcaptain': 'https://gcaptain.com/feed/',
+    'lloyds_list': 'https://www.lloydslist.com/rss/ports-and-logistics',
+    'the_maritime_standard': 'https://www.themaritimestandard.com/category/uae/feed/',
+    'joc_logistics': 'https://www.joc.com/rss.xml',
 }
 
-# Enhanced Borouge/ADNOC Relevance - Major Carrier Focus
+# Precision Targeting - SVP Actionable Intelligence
 BOURUGE_RELEVANCE = {
-    'regions': ['UAE', 'Gulf', 'Middle East', 'Strait of Hormuz', 'Arabian Gulf', 'Persian Gulf', 'Abu Dhabi', 'Dubai', 'Jebel Ali', 'Khalifa', 'Ruweis'],
-    'operations': [
-        'petrochemical', 'polyethylene', 'propylene', 'chemical tanker', 'specialized shipping', 'LNG', 'gas', 'oil refinery', 
-        'container shipping', 'port operations', 'freight forwarding', 'logistics hub', 'terminal operations',
-        'container terminal', 'berth', 'dock operations', 'cargo handling', 'vessel operations'
+    # Tier 1: Primary Stakeholders (Must mention at least one)
+    'entities': [
+        'Borouge', 'ADNOC', 'L&S', 'Nimex', 'MAERSK', 'MSC', 'CMA CGM', 
+        'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO'
     ],
-    'routes': [
-        'Gulf-to-Asia', 'Middle East logistics', 'Asia-Middle East', 'UAE shipping', 'Arabian Gulf shipping', 'Strait of Hormuz',
-        'container route', 'shipping lane', 'freight corridor', 'logistics route', 'MSC route', 'Maersk route'
+    # Tier 2: Actionable Locations
+    'ports_routes': [
+        'Khalifa Port', 'Jebel Ali', 'Ruways', 'Ruwais', 'Suez Canal', 
+        'Strait of Hormuz', 'Red Sea', 'Bab el-Mandeb', 'Sohar'
     ],
-    'ports': [
-        'Jebel Ali', 'Abu Dhabi', 'Dubai', 'Khalifa', 'Ruweis', 'Fujairah', 'Khor Fakkan',
-        'container terminal', 'port authority', 'shipping hub', 'logistics hub'
+    # Tier 3: Operational Impact Triggers
+    'impact_events': [
+        'congestion', 'delay', 'blank sailing', 'force majeure', 'surcharge', 
+        'strike', 'closure', 'suspension', 'explosion', 'attack', 'detention'
     ],
-    'companies': [
-        'Borouge', 'ADNOC', 'Abu Dhabi National Oil Company', 'ADNOC Gas', 'Borouge Plastics', 'Borouge Polymers',
-        # MAJOR CONTAINER LINES - COMPREHENSIVE COVERAGE
-        'MSC', 'Maersk', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'HMM', 'Yang Ming', 'Zim', 'PIL', 'Hanjin', 'Cosco', 'Wan Hai', 'FOCUS',
-        'carrier', 'shipping line', 'container operator', 'vessel operator'
+    # Tier 4: The "Noise" Filter (Blacklist)
+    'blacklist': [
+        'hero', 'award', 'biography', 'lifestyle', 'culture', 'tourism', 
+        'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech'
     ]
 }
 
@@ -44,5 +43,5 @@ EMAIL_CONFIG = {
 MONITORING_CONFIG = {
     'check_interval_minutes': 30,
     'alert_window_hours': 6,
-    'max_summary_length': 200
+    'max_summary_length': 250
 }

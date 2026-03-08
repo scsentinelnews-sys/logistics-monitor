@@ -174,7 +174,7 @@ class RSSFeedParser:
             r'(immediate|urgent|critical|emergency)\s+(action|required|needed)',
             r'(effective|starting|beginning)\s+(today|tomorrow|now)',
             r'(expected|estimated|projected)\s+(duration|timeline)',
-            r'(peak|seasonal|unprecedented)\s+(demand|volume)',
+            r'(peak|seasonal|unprecedented)\s*(demand|volume)',
         ]
         
         # Extract sentences with SVP decision patterns
@@ -253,15 +253,14 @@ class RSSFeedParser:
     
     def fetch_and_filter_news(self) -> List[Dict]:
         """Main function to fetch and filter SVP logistics intelligence"""
+        print("🚢 Starting SVP logistics intelligence fetch...")
+        
+        # Fetch all articles and process them directly
         all_articles = self.fetch_all_feeds()
         
-        # Filter for SVP relevance
-        filtered_articles = []
-        for article in all_articles:
-            if self.is_borouge_relevant(article):
-                filtered_articles.append(article)
+        print(f"📊 Found {len(all_articles)} SVP-relevant articles")
         
-        return filtered_articles
+        return all_articles
 
 # Standalone function for easy import
 def fetch_and_filter_news() -> List[Dict]:

@@ -30,7 +30,7 @@ jobs:
         GITHUB_ACTIONS: "true"
       run: |
         echo "🤖 Starting production logistics monitor at $(date)"
-        echo "📧 Email configured for: $LOGISTICS_EMAIL_RECIPIENT"
+        echo "📧 Email configured for recipient"
         
         python main.py
         

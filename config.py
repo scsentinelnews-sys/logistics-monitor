@@ -1,10 +1,10 @@
-# RSS Feed Configuration - Working Maritime Sources
+# RSS Feed Configuration - Open Access Sources
 RSS_SOURCES = {
-    'freightwaves': 'https://www.freightwaves.com/feed/',
-    'reuters_business': 'https://www.reuters.com/rssFeed/business',
-    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
-    'cnbc_supply_chain': 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
-    'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
+    'financial_times': 'https://www.ft.com/rss/companies',
+    'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+    'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
+    'wsj_business': 'https://www.feedsportal.com/rss/world_news',
+    'guardian_business': 'https://www.theguardian.com/business/rss',
 }
 
 # Precision Targeting - SVP Actionable Intelligence
@@ -12,7 +12,8 @@ BOURUGE_RELEVANCE = {
     # Tier 1: Primary Stakeholders (Must mention at least one)
     'entities': [
         'Borouge', 'ADNOC', 'L&S', 'Nimex', 'MAERSK', 'MSC', 'CMA CGM', 
-        'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO'
+        'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
+        'shipping', 'container', 'vessel', 'port', 'logistics', 'freight', 'cargo'
     ],
     # Tier 2: Actionable Locations
     'ports_routes': [

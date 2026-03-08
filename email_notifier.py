@@ -153,8 +153,7 @@ class EmailNotifier:
                     <td style="vertical-align: top;">{article['category']}</td>
                     <td style="vertical-align: top;">
                         <strong>{article['title']}</strong><br>
-                        <small>{article['summary']}</small><br>
-                        <span class="article-info">Source: {article['source']}</span>
+                        <small>{article['summary']}</small>
                     </td>
                     <td style="vertical-align: top;">{article['source'].title()}</td>
                 </tr>

@@ -47,7 +47,7 @@ class EmailNotifier:
         # Create HTML table
         html_table = self.create_html_table(articles)
         
-        # Email body with clean, professional content
+        # Email body with neutral, professional content
         email_body = f"""
         <!DOCTYPE html>
         <html>
@@ -84,17 +84,6 @@ class EmailNotifier:
                     font-size: 12px;
                     color: #7f8c8d;
                 }}
-                .urgent {{
-                    color: #e74c3c;
-                    font-weight: bold;
-                }}
-                .action-required {{
-                    background-color: #fff3cd;
-                    border: 1px solid #ffeaa7;
-                    padding: 10px;
-                    border-radius: 5px;
-                    margin: 10px 0;
-                }}
                 table {{
                     border-collapse: collapse;
                     width: 100%;
@@ -126,15 +115,10 @@ class EmailNotifier:
         <body>
             <div class="header">
                 <h1>🚢 High-priority operational intelligence for Global Logistics</h1>
-                <p>Real-time logistics intelligence requiring immediate attention</p>
+                <p>Real-time logistics intelligence requiring attention</p>
             </div>
             
             <div class="content">
-                <div class="action-required">
-                    <h3 class="urgent">⚠️ IMMEDIATE ACTION REQUIRED</h3>
-                    <p>The following logistics intelligence items require your immediate attention and may impact operations, costs, or delivery schedules.</p>
-                </div>
-                
                 <h3>📊 Logistics Intelligence Summary</h3>
                 <p><strong>Total Critical Items:</strong> {len(articles)} actionable intelligence items detected</p>
                 <p><strong>Time Window:</strong> Last 6 hours of global logistics operations</p>
@@ -142,15 +126,13 @@ class EmailNotifier:
                 
                 {html_table}
                 
-                <div class="action-required">
-                    <h3>🎯 RECOMMENDED ACTIONS</h3>
-                    <ul>
-                        <li>Review all logistics intelligence items for operational impact</li>
-                        <li>Contact relevant logistics partners for contingency planning</li>
-                        <li>Assess potential cost implications and budget impact</li>
-                        <li>Update supply chain risk assessments based on current intelligence</li>
-                    </ul>
-                </div>
+                <h3>🎯 RECOMMENDED ACTIONS</h3>
+                <ul>
+                    <li>Review all logistics intelligence items for operational impact</li>
+                    <li>Contact relevant logistics partners for contingency planning</li>
+                    <li>Assess potential cost implications and budget impact</li>
+                    <li>Update supply chain risk assessments based on current intelligence</li>
+                </ul>
             </div>
             
             <div class="footer">

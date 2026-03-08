@@ -2,7 +2,7 @@ name: Logistics Monitor V2
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/30 * * * *'  # Every 30 minutes
   workflow_dispatch:
 
 jobs:
@@ -29,7 +29,9 @@ jobs:
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
         GITHUB_ACTIONS: "true"
       run: |
+        echo "🤖 Starting production logistics monitor..."
         python main.py
+        echo "✅ Production monitor completed"
         
     - name: Handle failure
       if: failure()

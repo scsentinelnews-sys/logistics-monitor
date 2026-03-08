@@ -1,4 +1,4 @@
-# RSS Feed Configuration - Enhanced with Reuters & Bloomberg (Keeps All Existing Sources)
+# RSS Feed Configuration - Enhanced with Alternative Reuters URLs
 RSS_SOURCES = {
     # Tier 1: Major Business & News (Your Existing Working Sources)
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
@@ -12,13 +12,13 @@ RSS_SOURCES = {
     'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
     
-    # Tier 3: NEW - Reuters Alternative URLs (Added)
-    'reuters_business': 'https://www.reuters.com/rssFeed/businessNews',
-    'reuters_world': 'https://www.reuters.com/rssFeed/worldNews',
-    'reuters_markets': 'https://www.reuters.com/rssFeed/marketsNews',
-    
-    # Tier 4: NEW - Bloomberg Alternative (Added)
+    # Tier 3: WORKING - Bloomberg Alternative
     'bloomberg_rss': 'https://feeds.bloomberg.com/markets/news.rss',
+    
+    # Tier 4: NEW - Try Different Reuters URLs
+    'reuters_alternative1': 'https://feeds.reuters.com/news/wealth',
+    'reuters_alternative2': 'https://feeds.reuters.com/reuters/topNews',
+    'reuters_alternative3': 'https://feeds.reuters.com/US/domesticNews',
 }
 
 # Precision Targeting - Enhanced Borouge/ADNOC Global Logistics Intelligence

@@ -1,25 +1,21 @@
-# RSS Feed Configuration - Enhanced with News Aggregators (Includes Reuters Content)
+# RSS Feed Configuration - Optimized Working Sources Only (11 Sources)
 RSS_SOURCES = {
-    # Tier 1: Major Business & News (Your Existing Working Sources)
+    # Tier 1: Major Business & News (Working Sources)
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
     'guardian_business': 'https://www.theguardian.com/business/rss',
     
-    # Tier 2: Maritime & Logistics Sources (Your Existing Working Sources)
+    # Tier 2: Maritime & Logistics Sources (Working Sources)
     'joc_container': 'https://www.joc.com/rss.xml',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
     'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
     
-    # Tier 3: WORKING - Bloomberg Alternative
+    # Tier 3: Premium Business Sources (Working)
     'bloomberg_rss': 'https://feeds.bloomberg.com/markets/news.rss',
-    
-    # Tier 4: News Aggregators (Include Reuters & Bloomberg Content)
-    'google_news_business': 'https://news.google.com/rss/topics/CAAqBwgKMKNGWQuw4ajbAg',
     'yahoo_finance': 'https://finance.yahoo.com/news/rssindex',
     'marketwatch': 'https://www.marketwatch.com/rss/topstories',
-    'wsj_business': 'https://feeds.wsj.com/rss/world_news',
 }
 
 # Precision Targeting - Enhanced Borouge/ADNOC Global Logistics Intelligence

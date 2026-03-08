@@ -138,10 +138,10 @@ class EmailNotifier:
     def send_test_email(self, sender_email: str, sender_password: str) -> bool:
         """Send test email to verify system is working"""
         try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = '✅ Logistics Monitor Test Successful'
-            msg['From'] = sender_email
-            msg['To'] = EMAIL_CONFIG['recipient']
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = "✅ Logistics Monitor Test Successful"
+            msg["From"] = sender_email
+            msg["To"] = EMAIL_CONFIG["recipient"]
             
             body = f"""
             <html>
@@ -152,21 +152,25 @@ class EmailNotifier:
                 <br>
                 <p><strong>System Status:</strong> Active</p>
                 <p><strong>Monitoring Sources:</strong> 11 optimized RSS sources (CNBC, BBC, FT, Guardian, Bloomberg, Yahoo Finance, MarketWatch, JOC, Hellenic, ICIS, Splash247)</p>
-                <p><strong>Alert Window:</strong> Last {MONITORING_CONFIG['alert_window_hours']} hours</p>
+                <p><strong>Alert Window:</strong> Last {MONITORING_CONFIG["alert_window_hours"]} hours</p>
             </body>
             </html>
             """
             
-            msg.attach(MIMEText(body, 'html'))
+            msg.attach(MIMEText(body, "html"))
             
             server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
             server.login(sender_email, sender_password)
-            server.sendmail(sender_email, EMAIL_CONFIG['recipient'], msg.as_string())
+            server.sendmail(sender_email, EMAIL_CONFIG["recipient"], msg.as_string())
             server.quit()
             
-            print(f"📧 Test email sent successfully to {EMAIL_CONFIG['recipient']}")
+            print(f"📧 Test email sent successfully to {EMAIL_CONFIG["recipient"]}")
             return True
+            
+        except Exception as e:
+            print(f"❌ Test email failed: {e}")
+            return False
             
         except Exception as e:
             print(f"❌ Test email failed: {e}")

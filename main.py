@@ -98,12 +98,18 @@ def main():
     # Initialize monitor
     monitor = LogisticsMonitor(email_user, email_password)
     
+    # For GitHub Actions - run production mode directly
+    if os.getenv('GITHUB_ACTIONS'):
+        print("🤖 Running in GitHub Actions mode - production check")
+        monitor.check_and_alert()
+        return
+    
     # Test configuration
     if not monitor.test_configuration():
         print("❌ Configuration test failed. Please check your settings.")
         return
     
-    # Ask user for mode
+    # Ask user for mode (only for local runs)
     print("\nSelect monitoring mode:")
     print("1. Run once (test)")
     print("2. Start continuous monitoring")

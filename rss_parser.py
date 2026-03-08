@@ -227,7 +227,7 @@ class RSSFeedParser:
         if svp_sentences:
             summary = " | ".join(svp_sentences)
         else:
-            summary = title[:MONITOR_CONFIG['max_summary_length']]
+            summary = title[:MONITORING_CONFIG['max_summary_length']]
         
         return summary
     

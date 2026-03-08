@@ -44,7 +44,7 @@ class LogisticsMonitor:
     def start_monitoring(self) -> None:
         """Start continuous monitoring with scheduled checks"""
         print("🚢 Starting AI Logistics Monitor")
-        print(f"📧 Alerts will be sent to: {EMAIL_CONFIG['recipient']}")
+        print(f"📧 Alerts will be sent to: {os.getenv('LOGISTICS_EMAIL_RECIPIENT')}")
         print(f"⏰ Checking every {MONITORING_CONFIG['check_interval_minutes']} minutes")
         print(f"🎯 Alert window: Last {MONITORING_CONFIG['alert_window_hours']} hours")
         print("-" * 50)
@@ -83,13 +83,12 @@ class LogisticsMonitor:
 def main():
     """Main entry point for the logistics monitoring system"""
     
-    # Email configuration (should be moved to environment variables for production)
-    email_user = os.getenv('LOGISTICS_EMAIL_USER', 'your-email@gmail.com')
-    email_password = os.getenv('LOGISTICS_EMAIL_PASSWORD', 'your-app-password')
+    # Email configuration from environment variables only
+    email_user = os.getenv('LOGISTICS_EMAIL_USER')
+    email_password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
     
-    if email_user == 'your-email@gmail.com' or email_password == 'your-app-password':
-        print("❌ Please configure email credentials:")
-        print("Set environment variables:")
+    if not email_user or not email_password:
+        print("❌ Please configure email credentials in GitHub Secrets:")
         print("  LOGISTICS_EMAIL_USER=your-email@gmail.com")
         print("  LOGISTICS_EMAIL_PASSWORD=your-app-password")
         print("\nNote: For Gmail, use an App Password instead of regular password")

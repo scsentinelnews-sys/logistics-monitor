@@ -1,3 +1,4 @@
+import os
 # RSS Feed Configuration - Logistics Intelligence
 RSS_SOURCES = {
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
@@ -81,10 +82,10 @@ BOURUGE_RELEVANCE = {
     ]
 }
 
-# Email Configuration
+# Email Configuration - No hardcoded credentials
 EMAIL_CONFIG = {
-    'recipient': 'sc.sentinelnews@gmail.com',
-    'sender': 'sc.sentinelnews@gmail.com',
+    'recipient': os.getenv('LOGISTICS_EMAIL_RECIPIENT'),
+    'sender': os.getenv('LOGISTICS_EMAIL_USER'),
     'subject_prefix': '🚢 Logistics Alert - Impact Analysis',
     'max_items': 5
 }

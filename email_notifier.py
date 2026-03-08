@@ -3,9 +3,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+import os
+from datetime import datetime
 from typing import List, Dict
 from config import EMAIL_CONFIG
-import os
 
 class EmailNotifier:
     def __init__(self):
@@ -19,8 +20,8 @@ class EmailNotifier:
         try:
             # Create message
             msg = MIMEMultipart()
-            msg['From'] = EMAIL_CONFIG['sender']
-            msg['To'] = EMAIL_CONFIG['recipient']
+            msg['From'] = os.getenv('LOGISTICS_EMAIL_USER')
+            msg['To'] = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
             msg['Subject'] = EMAIL_CONFIG['subject_prefix']
             
             # Create email body
@@ -32,7 +33,7 @@ class EmailNotifier:
             server.starttls()
             server.login(email_user, email_password)
             text = msg.as_string()
-            server.sendmail(EMAIL_CONFIG['sender'], EMAIL_CONFIG['recipient'], text)
+            server.sendmail(os.getenv('LOGISTICS_EMAIL_USER'), os.getenv('LOGISTICS_EMAIL_RECIPIENT'), text)
             server.quit()
             
             return True
@@ -171,8 +172,8 @@ class EmailNotifier:
         try:
             # Create message
             msg = MIMEMultipart()
-            msg['From'] = EMAIL_CONFIG['sender']
-            msg['To'] = EMAIL_CONFIG['recipient']
+            msg['From'] = os.getenv('LOGISTICS_EMAIL_USER')
+            msg['To'] = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
             msg['Subject'] = "🧪 Test Email - Logistics Monitor Configuration"
             
             # Test email body
@@ -201,7 +202,7 @@ class EmailNotifier:
                     <h3>📊 System Configuration</h3>
                     <ul>
                         <li><strong>Email Service:</strong> Gmail SMTP</li>
-                        <li><strong>Recipient:</strong> {EMAIL_CONFIG['recipient']}</li>
+                        <li><strong>Recipient:</strong> {os.getenv('LOGISTICS_EMAIL_RECIPIENT')}</li>
                         <li><strong>RSS Sources:</strong> 11 logistics and business feeds</li>
                         <li><strong>Monitoring Window:</strong> Last 6 hours</li>
                         <li><strong>Check Frequency:</strong> Every 30 minutes</li>
@@ -229,7 +230,7 @@ class EmailNotifier:
             server.starttls()
             server.login(email_user, email_password)
             text = msg.as_string()
-            server.sendmail(EMAIL_CONFIG['sender'], EMAIL_CONFIG['recipient'], text)
+            server.sendmail(os.getenv('LOGISTICS_EMAIL_USER'), os.getenv('LOGISTICS_EMAIL_RECIPIENT'), text)
             server.quit()
             
             return True

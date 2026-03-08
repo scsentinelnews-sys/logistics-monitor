@@ -3,15 +3,166 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
-import os
-from datetime import datetime
 from typing import List, Dict
-from config import EMAIL_CONFIG, MONITORING_CONFIG
+from config import EMAIL_CONFIG
+import os
 
 class EmailNotifier:
-    def __init__(self, smtp_server: str = 'smtp.gmail.com', smtp_port: int = 587):
-        self.smtp_server = smtp_server
-        self.smtp_port = smtp_port
+    def __init__(self):
+        self.smtp_server = "smtp.gmail.com"
+        self.smtp_port = 587
+        self.email_user = os.getenv('LOGISTICS_EMAIL_USER')
+        self.email_password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
+    
+    def send_email(self, articles: List[Dict], email_user: str, email_password: str) -> bool:
+        """Send email with logistics intelligence articles"""
+        try:
+            # Create message
+            msg = MIMEMultipart()
+            msg['From'] = EMAIL_CONFIG['sender']
+            msg['To'] = EMAIL_CONFIG['recipient']
+            msg['Subject'] = EMAIL_CONFIG['subject_prefix']
+            
+            # Create email body
+            email_body = self.create_email_body(articles)
+            msg.attach(MIMEText(email_body, 'html'))
+            
+            # Send email
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            server.starttls()
+            server.login(email_user, email_password)
+            text = msg.as_string()
+            server.sendmail(EMAIL_CONFIG['sender'], EMAIL_CONFIG['recipient'], text)
+            server.quit()
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error sending email: {e}")
+            return False
+    
+    def create_email_body(self, articles: List[Dict]) -> str:
+        """Create HTML email body with logistics intelligence articles"""
+        
+        # Create HTML table
+        html_table = self.create_html_table(articles)
+        
+        # Email body with updated heading and category
+        email_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    max-width: 1000px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }}
+                .header {{
+                    background-color: #2c3e50;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 5px 5px 0 0;
+                }}
+                .content {{
+                    background-color: #f8f9fa;
+                    padding: 20px;
+                    border-radius: 0 0 5px 5px;
+                    border: 1px solid #ddd;
+                    border-top: none;
+                }}
+                .footer {{
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #ecf0f1;
+                    border-radius: 5px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #7f8c8d;
+                }}
+                .urgent {{
+                    color: #e74c3c;
+                    font-weight: bold;
+                }}
+                .action-required {{
+                    background-color: #fff3cd;
+                    border: 1px solid #ffeaa7;
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin: 10px 0;
+                }}
+                table {{
+                    border-collapse: collapse;
+                    width: 100%;
+                    margin: 20px 0;
+                }}
+                th, td {{
+                    border: 1px solid #ddd;
+                    padding: 12px;
+                    text-align: left;
+                }}
+                th {{
+                    background-color: #34495e;
+                    color: white;
+                    font-weight: bold;
+                }}
+                tr:nth-child(even) {{
+                    background-color: #f2f2f2;
+                }}
+                tr:hover {{
+                    background-color: #e8f4f8;
+                }}
+                .article-link {{
+                    color: #666;
+                    font-style: italic;
+                    font-size: 0.9em;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🚢 High-priority operational intelligence for Global Logistics</h1>
+                <p>Real-time logistics intelligence requiring immediate attention</p>
+            </div>
+            
+            <div class="content">
+                <div class="action-required">
+                    <h3 class="urgent">⚠️ IMMEDIATE ACTION REQUIRED</h3>
+                    <p>The following logistics intelligence items require your immediate attention and may impact operations, costs, or delivery schedules.</p>
+                </div>
+                
+                <h3>📊 Logistics Intelligence Summary</h3>
+                <p><strong>Total Critical Items:</strong> {len(articles)} actionable intelligence items detected</p>
+                <p><strong>Time Window:</strong> Last 6 hours of global logistics operations</p>
+                <p><strong>Impact Level:</strong> High - May affect supply chain operations and costs</p>
+                
+                {html_table}
+                
+                <div class="action-required">
+                    <h3>🎯 RECOMMENDED ACTIONS</h3>
+                    <ul>
+                        <li>Review all logistics intelligence items for operational impact</li>
+                        <li>Contact relevant logistics partners for contingency planning</li>
+                        <li>Assess potential cost implications and budget impact</li>
+                        <li>Update supply chain risk assessments based on current intelligence</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>🤖 This logistics intelligence was automatically generated by the AI Logistics Monitor</p>
+                <p>📧 For questions or support, please contact the logistics operations team</p>
+                <p>⏰ Generated on: {self.get_current_time()}</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return email_body
     
     def create_html_table(self, articles: List[Dict]) -> str:
         """Create HTML table with 4 columns as specified"""
@@ -36,7 +187,7 @@ class EmailNotifier:
                     <td style="vertical-align: top;">
                         <strong>{article['title']}</strong><br>
                         <small>{article['summary']}</small><br>
-                        <a href="{article['link']}" style="color: #0066cc; text-decoration: none;">Read more</a>
+                        <span class="article-link">Source: {article['source']}</span>
                     </td>
                     <td style="vertical-align: top;">{article['source'].title()}</td>
                 </tr>
@@ -49,128 +200,84 @@ class EmailNotifier:
         
         return html_table
     
-    def create_email_body(self, articles: List[Dict]) -> str:
-        """Create HTML email body with operational intelligence"""
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
-        
-        html_body = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; }}
-                table {{ border-collapse: collapse; width: 100%; }}
-                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
-                th {{ background-color: #f2f2f2; }}
-                .header {{ background-color: #1f497d; color: white; padding: 20px; text-align: center; }}
-                .content {{ margin: 20px 0; }}
-                .footer {{ background-color: #f2f2f2; padding: 15px; font-size: 12px; color: #666; }}
-                tr:nth-child(even) {{ background-color: #f9f9f9; }}
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h2>🚢 Logistics Alert - Borouge/ADNOC Impact Analysis</h2>
-                <p>High-priority operational intelligence for Global Logistics SVP</p>
-            </div>
-            
-            <div class="content">
-                <h3>📊 Critical Logistics Updates (Last {MONITORING_CONFIG['alert_window_hours']} Hours)</h3>
-                <p><strong>Total Items:</strong> {len(articles)} | <strong>Generated:</strong> {timestamp}</p>
-                
-                {self.create_html_table(articles)}
-                
-                <h3>🎯 Operational Impact Summary</h3>
-                <p>This alert contains CRITICAL logistics intelligence that directly impacts Borouge/ADNOC operations including:</p>
-                <ul>
-                    <li>Shipping route disruptions in Gulf/Middle East region</li>
-                    <li>Port congestion affecting petrochemical shipments</li>
-                    <li>Freight rate changes impacting supply chain costs</li>
-                    <li>Vessel operational issues affecting delivery schedules</li>
-                </ul>
-                
-                <p><strong>Recommended Actions:</strong></p>
-                <ul>
-                    <li>IMMEDIATE ACTION: Review vessel schedules and reroute cargo if delays exceed 48 hours</li>
-                    <li>IMMEDIATE ACTION: Contact logistics partners for alternate routing options and activate contingency plans</li>
-                    <li>IMMEDIATE ACTION: Monitor port status and implement operational continuity measures</li>
-                </ul>
-            </div>
-            
-            <div class="footer">
-                <p>📧 AI Logistics Monitor | Automated Operational Intelligence System</p>
-                <p>For immediate operational decisions, verify critical information through official channels</p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        return html_body
-    
-    def send_email(self, articles: List[Dict], sender_email: str, sender_password: str) -> bool:
-        """Send email notification with logistics alerts"""
-        if not articles:
-            print("No articles to send")
-            return False
-        
+    def send_test_email(self, email_user: str, email_password: str) -> bool:
+        """Send test email to verify configuration"""
         try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = f'🚢 Logistics Alert - {len(articles)} Critical Updates Found'
-            msg['From'] = sender_email
+            # Create message
+            msg = MIMEMultipart()
+            msg['From'] = EMAIL_CONFIG['sender']
             msg['To'] = EMAIL_CONFIG['recipient']
+            msg['Subject'] = "🧪 Test Email - Logistics Monitor Configuration"
             
-            html_body = self.create_email_body(articles)
-            msg.attach(MIMEText(html_body, 'html'))
-            
-            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-            server.quit()
-            
-            print(f"📧 Email sent successfully to {EMAIL_CONFIG['recipient']}")
-            return True
-            
-        except Exception as e:
-            print(f"❌ Email failed: {e}")
-            return False
-    
-    def send_test_email(self, sender_email: str, sender_password: str) -> bool:
-        """Send test email to verify system is working"""
-        try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = '✅ Logistics Monitor Test Successful'
-            msg['From'] = sender_email
-            msg['To'] = EMAIL_CONFIG['recipient']
-            
-            recipient = EMAIL_CONFIG['recipient']
-            alert_window = MONITORING_CONFIG['alert_window_hours']
-            
-            body = f"""
+            # Test email body
+            test_body = f"""
+            <!DOCTYPE html>
             <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; padding: 20px; }}
+                    .header {{ background-color: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 5px; }}
+                    .content {{ padding: 20px; background-color: #f8f9fa; border-radius: 5px; margin-top: 10px; }}
+                    .success {{ color: #27ae60; font-weight: bold; }}
+                    .info {{ color: #3498db; }}
+                </style>
+            </head>
             <body>
-                <h2>✅ Logistics Monitor Test Successful</h2>
-                <p>Your AI logistics monitoring system is now active and configured.</p>
-                <p>You will receive alerts when actionable logistics intelligence affecting Borouge/ADNOC operations is detected.</p>
-                <br>
-                <p><strong>System Status:</strong> Active</p>
-                <p><strong>Monitoring Sources:</strong> 11 optimized RSS sources (CNBC, BBC, FT, Guardian, Bloomberg, Yahoo Finance, MarketWatch, JOC, Hellenic, ICIS, Splash247)</p>
-                <p><strong>Alert Window:</strong> Last {alert_window} hours</p>
+                <div class="header">
+                    <h1>🧪 Logistics Monitor Test</h1>
+                    <p>Configuration verification successful</p>
+                </div>
+                
+                <div class="content">
+                    <h2 class="success">✅ Email Configuration Test PASSED</h2>
+                    <p class="info">Your AI logistics monitoring system is ready to send operational intelligence alerts.</p>
+                    
+                    <h3>📊 System Configuration</h3>
+                    <ul>
+                        <li><strong>Email Service:</strong> Gmail SMTP</li>
+                        <li><strong>Recipient:</strong> {EMAIL_CONFIG['recipient']}</li>
+                        <li><strong>RSS Sources:</strong> 11 logistics and business feeds</li>
+                        <li><strong>Monitoring Window:</strong> Last 6 hours</li>
+                        <li><strong>Check Frequency:</strong> Every 30 minutes</li>
+                    </ul>
+                    
+                    <h3>🎯 What Happens Next</h3>
+                    <p>The system will automatically scan for logistics intelligence and send alerts when:</p>
+                    <ul>
+                        <li>Port congestion or closures affect operations</li>
+                        <li>Shipping delays or route disruptions occur</li>
+                        <li>Freight rate spikes impact costs</li>
+                        <li>Supply chain disruptions affect deliveries</li>
+                    </ul>
+                    
+                    <p><strong>Next scheduled check:</strong> Within 30 minutes</p>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background-color: #ecf0f1; border-radius: 5px; text-align: center; font-size: 12px; color: #7f8c8d;">
+                    <p>🤖 This is a test email from the AI Logistics Monitor system</p>
+                    <p>Generated on: {self.get_current_time()}</p>
+                </div>
             </body>
             </html>
             """
             
-            msg.attach(MIMEText(body, 'html'))
+            msg.attach(MIMEText(test_body, 'html'))
             
+            # Send email
             server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, EMAIL_CONFIG['recipient'], msg.as_string())
+            server.login(email_user, email_password)
+            text = msg.as_string()
+            server.sendmail(EMAIL_CONFIG['sender'], EMAIL_CONFIG['recipient'], text)
             server.quit()
             
-            print(f"📧 Test email sent successfully to {recipient}")
             return True
             
         except Exception as e:
-            print(f"❌ Test email failed: {e}")
+            print(f"Error sending test email: {e}")
             return False
+    
+    def get_current_time(self) -> str:
+        """Get current time in readable format"""
+        from datetime import datetime
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")

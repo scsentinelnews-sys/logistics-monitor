@@ -3,32 +3,29 @@ import os
 # RSS Feed Configuration - Authoritative Sources Only
 RSS_SOURCES = {
     # Top-Tier Authoritative Business News (High Credibility)
-    'reuters_business': 'https://www.reuters.com/rssFeed/businessNews',
+    'reuters_business': 'https://www.reuters.com/rss/world/rss',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
     'guardian_business': 'https://www.theguardian.com/business/rss',
-    'bloomberg_business': 'https://www.bloomberg.com/markets/news.rss',
-    
-    # Authoritative Financial Markets (Verified Sources)
-    'wall_street_journal': 'https://feeds.wsj.com/xml/rss/3_7455.xml',
-    'marketwatch': 'https://www.marketwatch.com/rss/topstories',
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'yahoo_finance': 'https://finance.yahoo.com/news/rssindex',
+    'marketwatch': 'https://www.marketwatch.com/rss/topstories',
     
     # Authoritative Logistics & Shipping (Industry-Standard Sources)
     'joc_container': 'https://www.joc.com/rss.xml',
     'splash247': 'https://splash247.com/feed/',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
-    'lloyds_list': 'https://www.lloydslist.com/rss.xml',
+    'freightwaves': 'https://www.freightwaves.com/rss.xml',
+    'lloyd's_list': 'https://www.lloydslist.com/rss.xml',
     
     # Authoritative Energy & Commodities (Verified Sources)
-    'platts_oil': 'https://www.platts.com/rss/platts-oil-news',
     'icis_energy': 'https://www.icis.com/rss/',
+    'platts_oil': 'https://www.platts.com/rss/platts-oil-news',
     'argus_media': 'https://www.argusmedia.com/rss.xml',
     
     # Authoritative UAE Sources (Local Credibility)
     'wam_uae': 'https://www.wam.ae/rss.xml',
-    'the_national': 'https://www.thenationalnews.com/rss',
+    'the_national': 'https://www.thenationalnews.com/rss.xml',
     'gulf_news': 'https://gulfnews.com/rss/business'
 }
 
@@ -107,9 +104,9 @@ BOURUGE_RELEVANCE = {
         'bound containers', 'gulf-bound', 'transit time', 'lead time'
     ],
     
-    # Tier 4: Enhanced Blacklist (Filter Non-Logistics Content)
+    # Tier 4: Corrected Blacklist (Filter Non-Logistics Content)
     'blacklist': [
-        # Technology & AI (Filter Out)
+        # Technology & AI (Filter Out - BUT keep logistics-related AI)
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'investment', 'significant investment', 'lab',

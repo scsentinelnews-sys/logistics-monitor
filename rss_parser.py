@@ -296,7 +296,7 @@ class RSSFeedParser:
         return has_specifics and has_specifics
     
     def is_svp_ready(self, article: Dict) -> bool:
-        """2026 SVP-ready quality check with relaxed requirements for UAE port news"""
+        """2026 SVP-ready quality check with strategic override for UAE infrastructure"""
         content = f"{article.get('title', '')} {article.get('summary', '')}"
         
         # 2026 Quality Markers
@@ -314,8 +314,11 @@ class RSSFeedParser:
         has_development_focus = any(keyword.lower() in content.lower() for keyword in development_keywords)
         
         # Check for operational keywords
-        operational_keywords = ['operations', 'efficiency', 'improved', 'reduced', 'delays', 'congestion']
+        operational_keywords = ['operations', 'efficiency', 'improved', 'reduced', 'delays', 'congestion', 'digital port operations']
         has_operational_focus = any(keyword.lower() in content.lower() for keyword in operational_keywords)
+        
+        # Check for any numbers (very relaxed)
+        has_any_numbers = bool(re.search(r'\d+', content))
         
         # Debug output
         print(f"🔍 2026 Quality Check:")
@@ -326,25 +329,37 @@ class RSSFeedParser:
         print(f"   UAE Port Focus: {has_uae_port_focus}")
         print(f"   Development Focus: {has_development_focus}")
         print(f"   Operational Focus: {has_operational_focus}")
+        print(f"   Any Numbers: {has_any_numbers}")
         
-        # Relaxed threshold for 2026 quality
+        # Base quality check
         base_quality = self.is_high_quality(article)
         
-        # Different requirements for different types of news
-        if has_uae_port_focus and has_development_focus:
-            # UAE port development news - very relaxed requirements
-            data_density = has_hard_data or has_vessel_identifier or has_date_time
-        elif has_uae_port_focus and has_operational_focus:
-            # UAE port operations news - relaxed requirements
-            data_density = has_hard_data or has_vessel_identifier or has_date_time
+        # NEW: Strategic Override for UAE Infrastructure
+        # If the news is about our core backyard, we lower the "Data Density" requirement.
+        strategic_locations = ['kizad', 'khalifa port', 'ruwais', 'ad ports', 'dp world', 'ta\'ziz']
+        strategic_actions = ['development', 'expansion', 'mou', 'memorandum', 'partnership', 'agreement', 'investment', 'deal', 'project']
+        
+        content_lower = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+        
+        is_strategic_uae_news = any(loc in content_lower for loc in strategic_locations) and \
+                            any(act in content_lower for act in strategic_actions)
+        
+        print(f"   Strategic UAE News: {is_strategic_uae_news}")
+        
+        # Data density calculation
+        if has_uae_port_focus and (has_development_focus or has_operational_focus):
+            # UAE port development/operations news - relaxed requirements
+            data_density = has_any_numbers  # Just need any numbers
         elif has_uae_port_focus:
-            # UAE port general news - standard requirements
-            data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
+            # UAE port general news - relaxed requirements
+            data_density = has_any_numbers or has_vessel_identifier or has_date_time
         else:
             # Other news - strict requirements
             data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
         
-        is_svp_ready = base_quality and data_density
+        # UPDATED RETURN:
+        # Keep it high quality, but pass if it's high data density OR strategic UAE growth
+        is_svp_ready = base_quality and (data_density or is_strategic_uae_news)
         
         print(f"   SVP-Ready: {is_svp_ready}")
         

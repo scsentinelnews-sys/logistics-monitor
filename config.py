@@ -1,4 +1,5 @@
 import os
+
 # RSS Feed Configuration - Logistics Intelligence
 RSS_SOURCES = {
     'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
@@ -15,10 +16,12 @@ RSS_SOURCES = {
     'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
 }
 
-# Enhanced Logistics Intelligence - Ensure Real Crises Are Caught
+# Enhanced Logistics Intelligence - ADNOC/Borouge Specific Focus
 BOURUGE_RELEVANCE = {
     # Tier 1: Primary Stakeholders (Decision Impact)
     'entities': [
+        # ADNOC & Borouge (Highest Priority)
+        'ADNOC', 'Borouge', 'Abu Dhabi National Oil Company',
         # Major Container Lines (Direct Impact on Operations)
         'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
         # Logistics & Shipping Terms (Direct Impact)
@@ -29,24 +32,37 @@ BOURUGE_RELEVANCE = {
         'Walmart', 'Amazon', 'Target', 'Home Depot', 'IKEA', 'Tesla',
         # Energy & Commodities (Direct Impact)
         'Shell', 'BP', 'ExxonMobil', 'Chevron', 'TotalEnergies',
-        'OPEC', 'IEA'
+        'OPEC', 'IEA',
+        # UAE Specific Entities
+        'Abu Dhabi Ports', 'DP World', 'Etihad Rail', 'Emirates Shipping'
     ],
     
     # Tier 2: Critical Locations (Operations Impact)
     'ports_routes': [
+        # UAE Critical Locations (Direct Impact)
+        'Ruwais', 'Ruwais refinery', 'Ruwais industrial', 'Ruwais complex', 'Jebel Ali', 'Khalifa Port', 'Abu Dhabi', 'Dubai', 'Sharjah',
+        'Fujairah', 'Sohar', 'Mussafah', 'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
+        # ADNOC/Borouge Specific Locations
+        'Ruwais petrochemical', 'Ruwais refinery complex', 'Borouge plant', 'ADNOC processing',
         # Gulf Critical Locations (Direct Impact)
-        'Khalifa Port', 'Jebel Ali', 'Ruways', 'Ruwais', 'Fujairah', 'Sohar',
+        'Strait of Hormuz', 'Bab el-Mandeb', 'Persian Gulf', 'Gulf of Oman', 'Arabian Gulf',
         # Global Maritime Chokepoints (Supply Chain Impact)
-        'Suez Canal', 'Strait of Hormuz', 'Bab el-Mandeb', 'Strait of Malacca', 'Panama Canal',
+        'Suez Canal', 'Strait of Malacca', 'Panama Canal',
         # Major Global Ports (Operations Impact)
         'Singapore', 'Rotterdam', 'Shanghai', 'Ningbo', 'Hong Kong', 'Busan', 'Los Angeles', 'Long Beach',
-        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah', 'Genoa', 'Felixstowe', 'Le Havre', 'Southampton', 'Charleston', 'Savannah',
+        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah', 'Genoa', 'Felixstowe', 'Le Havre', 'Southampton', 'Charleston',
         # Additional Key Locations
         'Middle East', 'Gulf region', 'Red Sea', 'Cape of Good Hope', 'Indian Ocean', 'Mediterranean Sea'
     ],
     
     # Tier 3: Decision Triggers (Specific Impacts - Enhanced)
     'impact_events': [
+        # Security & Safety Incidents (Critical Impact)
+        'fire', 'fire attack', 'explosion', 'blast', 'incident', 'accident', 'security incident', 'terror attack',
+        'attack', 'security breach', 'sabotage', 'damage', 'destruction', 'emergency', 'crisis',
+        # Production & Operations Impact (Direct Impact)
+        'production halt', 'shutdown', 'suspension', 'operational disruption', 'facility damage',
+        'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
         # Port Operations (Direct Impact)
         'congestion', 'port congestion', 'port closure', 'port suspension', 'port disruption',
         'port delay', 'port backlog', 'port strike', 'severe disruption', 'yard congestion',
@@ -56,7 +72,7 @@ BOURUGE_RELEVANCE = {
         'suspension', 'reroute', 'reroutes', 'detour', 'detours',
         # Safety & Security (Risk Impact)
         'ship attack', 'piracy', 'detention', 'seizure', 'collision', 'grounding',
-        'accident', 'incident', 'mechanical failure', 'weather disruption', 'security concerns',
+        'mechanical failure', 'weather disruption', 'security concerns',
         # Market & Cost Impacts (Financial Impact)
         'surcharge', 'rate hike', 'rate increase', 'shortage', 'shortages', 'bottleneck', 'bottlenecks',
         'freight rates', 'rate surge', 'price surge', 'cost increase', '15%', '40%', 'acute',

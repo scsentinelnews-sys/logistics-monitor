@@ -152,9 +152,10 @@ class RSSFeedParser:
             'energy price', 'oil price', 'stock market', 'share price', 'retail sales', 'consumer spending',
             'financial services', 'investment banking', 'personal finance', 'corporate earnings'
         ]
-        if any(bad_word in content for bad_word in kill_list):
-            print(f"🚫 DOMAIN LOCKDOWN: ['{bad_word}'] found - BLOCKED")
-            return False
+        for bad_word in kill_list:
+            if bad_word in content:
+                print(f"🚫 DOMAIN LOCKDOWN: ['{bad_word}'] found - BLOCKED")
+                return False
         
         # 2. SECTOR WHITELIST (Must contain at least one of these core logistics concepts)
         core_sectors = [

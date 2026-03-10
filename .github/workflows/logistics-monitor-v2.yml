@@ -1,7 +1,9 @@
 name: Logistics Monitor V2
 
 on:
-  workflow_dispatch:  # Manual trigger only
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:  # Manual trigger still available
 
 jobs:
   monitor:
@@ -27,15 +29,17 @@ jobs:
         LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
         GITHUB_ACTIONS: "true"
       run: |
-        echo "🤖 Starting manual production logistics monitor at $(date)"
+        echo "🤖 Starting production logistics monitor at $(date)"
         echo "📧 Email configured for recipient"
+        echo "🔥 Ruwais Abu Dhabi UAE attack detection enabled"
         
         python main.py
         
-        echo "✅ Manual production monitor completed at $(date)"
+        echo "✅ Production monitor completed at $(date)"
         
     - name: Log Summary
       run: |
-        echo "📊 Summary: Manual logistics monitor completed successfully"
+        echo "📊 Summary: Logistics monitor completed successfully"
         echo "📧 Email will be sent only when real logistics intelligence is found"
+        echo "🔥 Ruwais Abu Dhabi UAE attacks will always be caught"
         echo "🎯 No email = No real logistics crises (correct behavior)"

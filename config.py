@@ -41,8 +41,15 @@ BOURUGE_RELEVANCE = {
     'ports_routes': [
         # UAE Critical Locations (Highest Priority)
         'Ruwais', 'Ruwais Abu Dhabi', 'Ruwais UAE', 'Ruwais industrial', 'Ruwais refinery', 'Ruwais complex',
-        'Jebel Ali', 'Khalifa Port', 'Abu Dhabi', 'Dubai', 'Sharjah', 'Fujairah', 'Sohar', 'Mussafah',
+        'Khalifa Port', 'Khalifa Industrial Zone', 'Khalifa Port Abu Dhabi',
+        'Jebel Ali', 'Jebel Ali Port', 'Jebel Ali Free Zone', 'Jebel Ali Terminal',
+        'Fujairah', 'Fujairah Port', 'Fujairah Terminal', 'Fujairah Shipyard',
+        'Abu Dhabi', 'Dubai', 'Sharjah', 'Sohar', 'Mussafah',
         'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
+        # ADNOC/Borouge Specific Locations
+        'Borouge plant', 'Borouge complex', 'Borouge facility', 'Borouge polymer plant',
+        'ADNOC processing', 'ADNOC refinery', 'ADNOC headquarters', 'ADNOC office',
+        'ADNOC terminal', 'ADNOC depot', 'ADNOC distribution',
         # Global Maritime Chokepoints (Supply Chain Impact)
         'Strait of Hormuz', 'Bab el-Mandeb', 'Suez Canal', 'Strait of Malacca', 'Panama Canal',
         'Persian Gulf', 'Gulf of Oman', 'Arabian Gulf',
@@ -84,13 +91,14 @@ BOURUGE_RELEVANCE = {
         'bound containers', 'gulf-bound', 'transit time', 'lead time'
     ],
     
-    # Tier 4: Enhanced Blacklist (Filter General Tech/AI/Oil/Market News)
+    # Tier 4: Corrected Blacklist (Filter Only Non-Logistics Content)
     'blacklist': [
-        # Technology & AI (Filter Out - High Priority)
-        'nvidia', 'ai', 'artificial intelligence', 'machine learning', 'thinking machines',
+        # Technology & AI (Filter Out - BUT keep logistics-related AI)
+        'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'investment', 'significant investment', 'lab',
         'research lab', 'innovation', 'digital', 'automation', 'robotics',
+        # Note: 'ai' removed to allow legitimate logistics AI content
         
         # General Oil/Market News (Filter Out)
         'oil price', 'oil prices', 'crude oil price', 'crude oil prices', 'energy prices',

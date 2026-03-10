@@ -1,22 +1,38 @@
 import os
 
-# RSS Feed Configuration - Logistics Intelligence
+# RSS Feed Configuration - Authoritative Sources Only
 RSS_SOURCES = {
-    'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+    # Top-Tier Authoritative Business News (High Credibility)
+    'reuters_business': 'https://www.reuters.com/rssFeed/businessNews',
     'bbc_business': 'https://feeds.bbci.co.uk/news/business/rss.xml',
     'financial_times': 'https://www.ft.com/rss/companies',
     'guardian_business': 'https://www.theguardian.com/business/rss',
-    'bloomberg_rss': 'https://feeds.bloomberg.com/markets/news.rss',
-    'yahoo_finance': 'https://finance.yahoo.com/news/rssindex',
+    'bloomberg_business': 'https://www.bloomberg.com/markets/news.rss',
+    
+    # Authoritative Financial Markets (Verified Sources)
+    'wall_street_journal': 'https://feeds.wsj.com/xml/rss/3_7455.xml',
     'marketwatch': 'https://www.marketwatch.com/rss/topstories',
+    'cnbc_business': 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+    'yahoo_finance': 'https://finance.yahoo.com/news/rssindex',
+    
+    # Authoritative Logistics & Shipping (Industry-Standard Sources)
     'joc_container': 'https://www.joc.com/rss.xml',
-    'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
-    'icis_energy': 'https://www.icis.com/rss/',
     'splash247': 'https://splash247.com/feed/',
-    'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
+    'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
+    'lloyds_list': 'https://www.lloydslist.com/rss.xml',
+    
+    # Authoritative Energy & Commodities (Verified Sources)
+    'platts_oil': 'https://www.platts.com/rss/platts-oil-news',
+    'icis_energy': 'https://www.icis.com/rss/',
+    'argus_media': 'https://www.argusmedia.com/rss.xml',
+    
+    # Authoritative UAE Sources (Local Credibility)
+    'wam_uae': 'https://www.wam.ae/rss.xml',
+    'the_national': 'https://www.thenationalnews.com/rss',
+    'gulf_news': 'https://gulfnews.com/rss/business'
 }
 
-# Enhanced Logistics Intelligence - Core Logistics Focus
+# Enhanced Logistics Intelligence - Authoritative Sources Focus
 BOURUGE_RELEVANCE = {
     # Tier 1: Primary Stakeholders (Decision Impact)
     'entities': [
@@ -91,14 +107,13 @@ BOURUGE_RELEVANCE = {
         'bound containers', 'gulf-bound', 'transit time', 'lead time'
     ],
     
-    # Tier 4: Corrected Blacklist (Filter Only Non-Logistics Content)
+    # Tier 4: Enhanced Blacklist (Filter Non-Logistics Content)
     'blacklist': [
-        # Technology & AI (Filter Out - BUT keep logistics-related AI)
+        # Technology & AI (Filter Out)
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'investment', 'significant investment', 'lab',
         'research lab', 'innovation', 'digital', 'automation', 'robotics',
-        # Note: 'ai' removed to allow legitimate logistics AI content
         
         # General Oil/Market News (Filter Out)
         'oil price', 'oil prices', 'crude oil price', 'crude oil prices', 'energy prices',
@@ -122,7 +137,7 @@ BOURUGE_RELEVANCE = {
 EMAIL_CONFIG = {
     'recipient': os.getenv('LOGISTICS_EMAIL_RECIPIENT'),
     'sender': os.getenv('LOGISTICS_EMAIL_USER'),
-    'subject_prefix': '🚢 Logistics Alert - Impact Analysis',
+    'subject_prefix': '🚢 Logistics Alert - Authoritative Sources Only',
     'max_items': 5
 }
 

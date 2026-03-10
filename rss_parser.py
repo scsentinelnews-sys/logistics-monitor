@@ -5,6 +5,14 @@ import re
 from typing import List, Dict, Optional
 from config import RSS_SOURCES, BOURUGE_RELEVANCE, MONITORING_CONFIG
 
+# Import the tracker
+try:
+    from sent_articles_tracker import SentArticlesTracker
+    TRACKER_AVAILABLE = True
+except ImportError:
+    TRACKER_AVAILABLE = False
+    print("⚠️ SentArticlesTracker not available - duplicate prevention disabled")
+
 class RSSFeedParser:
     def __init__(self):
         self.session = requests.Session()
@@ -16,6 +24,12 @@ class RSSFeedParser:
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
         })
+        
+        # Initialize tracker if available
+        if TRACKER_AVAILABLE:
+            self.tracker = SentArticlesTracker()
+        else:
+            self.tracker = None
     
     def fetch_feed(self, source_name: str, source_url: str) -> Optional[List[Dict]]:
         """Fetch and parse RSS feed from a source"""
@@ -225,7 +239,14 @@ class RSSFeedParser:
         
         print(f"📊 Found {len(all_articles)} relevant articles")
         
-        return all_articles
+        # Filter out already sent articles if tracker is available
+        if self.tracker:
+            new_articles = self.tracker.filter_new_articles(all_articles)
+            print(f"📧 {len(new_articles)} new articles (duplicates removed)")
+            return new_articles
+        else:
+            print("⚠️ No duplicate prevention available - sending all articles")
+            return all_articles
 
 # Standalone function for easy import
 def fetch_and_filter_news() -> List[Dict]:

@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '*/30 * * * *'  # Every 30 minutes
   workflow_dispatch:  # Manual trigger still available
+  # Add push trigger to activate schedule
+  push:
+    branches: [ main ]
 
 jobs:
   monitor:
@@ -32,6 +35,7 @@ jobs:
         echo "🤖 Starting production logistics monitor at $(date)"
         echo "📧 Email configured for recipient"
         echo "🔥 Ruwais Abu Dhabi UAE attack detection enabled"
+        echo "⏰ Schedule: Every 30 minutes"
         
         python main.py
         
@@ -43,3 +47,4 @@ jobs:
         echo "📧 Email will be sent only when real logistics intelligence is found"
         echo "🔥 Ruwais Abu Dhabi UAE attacks will always be caught"
         echo "🎯 No email = No real logistics crises (correct behavior)"
+        echo "⏰ Next run: $(date -d '+30 minutes' '+%H:%M')"

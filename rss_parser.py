@@ -18,7 +18,7 @@ class RSSFeedParser:
             print("Warning: SentArticlesTracker not available, duplicate prevention disabled")
     
     def fetch_and_filter_news(self) -> List[Dict]:
-        """Fetch and filter news from RSS feeds with enhanced quality control"""
+        """Fetch and filter news with 2026 risk filter and SVP-ready quality"""
         all_articles = []
         
         for source_name, feed_url in RSS_SOURCES.items():
@@ -35,9 +35,9 @@ class RSSFeedParser:
         unique_articles = self.remove_duplicates(all_articles)
         print(f"📊 Found {len(unique_articles)} unique relevant articles")
         
-        # Apply quality control
-        quality_articles = self.apply_quality_control(unique_articles)
-        print(f"🎯 Quality articles: {len(quality_articles)}")
+        # Apply 2026 quality control
+        quality_articles = self.apply_2026_quality_control(unique_articles)
+        print(f"🎯 2026 SVP-ready articles: {len(quality_articles)}")
         
         return quality_articles
     
@@ -87,19 +87,19 @@ class RSSFeedParser:
         return text
     
     def filter_articles(self, articles: List[Dict], source_name: str) -> List[Dict]:
-        """Filter articles based on relevance criteria with enhanced logic"""
+        """Filter articles with 2026 risk-aware criteria"""
         relevant_articles = []
         
         for article in articles:
-            if self.is_borouge_relevant(article):
-                # Enhance article with actionable summary
+            if self.is_2026_relevant(article):
+                # Enhance article with 2026 SVP summary
                 enhanced_article = self.enhance_article(article)
                 relevant_articles.append(enhanced_article)
         
         return relevant_articles
     
-    def is_borouge_relevant(self, article: Dict) -> bool:
-        """Enhanced relevance check with stricter criteria"""
+    def is_2026_relevant(self, article: Dict) -> bool:
+        """2026-enhanced relevance check with new technical risks"""
         title = article.get('title', '').lower()
         summary = article.get('summary', '').lower()
         content = f"{title} {summary}"
@@ -111,20 +111,24 @@ class RSSFeedParser:
                 print(f"❌ BLACKLISTED: ['{blacklist_term}']")
                 return False
         
-        # Enhanced relevance logic
+        # 2026 Enhanced entities, locations, impacts
         entities = BOURUGE_RELEVANCE.get('entities', [])
         locations = BOURUGE_RELEVANCE.get('ports_routes', [])
-        impacts = BOURUGE_RELEVANCE.get('impact_events', [])
         
-        # Check for entities + impact OR locations + impact
-        entities_found = [entity for entity in entities if entity.lower() in content]
-        locations_found = [location for location in locations if location.lower() in content]
-        impacts_found = [impact for impact in impacts if impact.lower() in content]
+        # 2026 Enhanced impacts with new technical risks
+        impacts_2026 = BOURUGE_RELEVANCE.get('impact_events', []) + [
+            'GNSS', 'GPS spoofing', 'UAV', 'projectile', 'war risk surcharge', 'WRS',
+            'blank sailing', 'diversion', 'Strait of Hormuz closure'
+        ]
         
         # Debug output
+        entities_found = [entity for entity in entities if entity.lower() in content]
+        locations_found = [location for location in locations if location.lower() in content]
+        impacts_found = [impact for impact in impacts_2026 if impact.lower() in content]
+        
         print(f"👥 Entities found: {entities_found}")
         print(f"📍 Locations found: {locations_found}")
-        print(f"💥 Impacts found: {impacts_found}")
+        print(f"💥 2026 Impacts found: {impacts_found}")
         
         # Enhanced relevance criteria
         entity_impact_match = len(entities_found) > 0 and len(impacts_found) > 0
@@ -132,31 +136,32 @@ class RSSFeedParser:
         
         is_relevant = entity_impact_match or location_impact_match
         
-        print(f"✅ Relevant: {is_relevant} (Entity+Impact: {entity_impact_match}, Location+Impact: {location_impact_match})")
+        print(f"✅ 2026 Relevant: {is_relevant} (Entity+Impact: {entity_impact_match}, Location+Impact: {location_impact_match})")
         
         return is_relevant
     
     def enhance_article(self, article: Dict) -> Dict:
-        """Enhance article with actionable summary and key information"""
+        """Enhance article with 2026 SVP-ready summary"""
         title = article.get('title', '')
         summary = article.get('summary', '')
         content = f"{title} {summary}"
         
-        # Extract key information
+        # Extract 2026 key information
         key_entities = self.extract_key_entities(content)
         key_locations = self.extract_key_locations(content)
-        key_impacts = self.extract_key_impacts(content)
+        key_impacts = self.extract_2026_impacts(content)
         
-        # Create actionable summary
-        actionable_summary = self.create_actionable_summary(title, summary, key_entities, key_locations, key_impacts)
+        # Create 2026 SVP-ready summary
+        svp_summary = self.create_2026_svp_summary(title, summary, key_entities, key_locations, key_impacts)
         
         # Enhanced article
         enhanced_article = article.copy()
-        enhanced_article['summary'] = actionable_summary
+        enhanced_article['summary'] = svp_summary
         enhanced_article['key_entities'] = key_entities
         enhanced_article['key_locations'] = key_locations
         enhanced_article['key_impacts'] = key_impacts
         enhanced_article['actionable'] = len(key_impacts) > 0
+        enhanced_article['svp_ready'] = self.is_svp_ready(enhanced_article)
         
         return enhanced_article
     
@@ -182,9 +187,12 @@ class RSSFeedParser:
         
         return found_locations[:3]  # Limit to top 3
     
-    def extract_key_impacts(self, content: str) -> List[str]:
-        """Extract key impacts from content"""
-        impacts = BOURUGE_RELEVANCE.get('impact_events', [])
+    def extract_2026_impacts(self, content: str) -> List[str]:
+        """Extract 2026 key impacts including new technical risks"""
+        impacts = BOURUGE_RELEVANCE.get('impact_events', []) + [
+            'GNSS', 'GPS spoofing', 'UAV', 'projectile', 'war risk surcharge', 'WRS',
+            'blank sailing', 'diversion', 'Strait of Hormuz closure'
+        ]
         found_impacts = []
         
         for impact in impacts:
@@ -193,8 +201,8 @@ class RSSFeedParser:
         
         return found_impacts[:3]  # Limit to top 3
     
-    def create_actionable_summary(self, title: str, summary: str, entities: List[str], locations: List[str], impacts: List[str]) -> str:
-        """Create actionable summary for SVP consumption"""
+    def create_2026_svp_summary(self, title: str, summary: str, entities: List[str], locations: List[str], impacts: List[str]) -> str:
+        """Create 2026 SVP-ready summary with data density"""
         # Start with the main point
         actionable_parts = []
         
@@ -216,15 +224,16 @@ class RSSFeedParser:
         else:
             actionable_summary = f"{title}. {summary[:200]}..."
         
-        # Remove hallucination-prone phrases
-        hallucination_phrases = [
-            "seek solutions", "looking for solutions", "exploring options", 
+        # Remove 2026 hallucination phrases
+        hallucination_phrases_2026 = [
+            "seek solutions", "monitoring situation", "hope of a swift reopening", 
+            "industry sources say", "reports suggest", "exploring options",
             "considering measures", "working on", "addressing concerns",
-            "monitoring situation", "keeping watch", "staying alert",
-            "in response to", "following reports", "amid concerns"
+            "keeping watch", "staying alert", "in response to", "following reports",
+            "amid concerns", "may affect", "could impact", "potential impact"
         ]
         
-        for phrase in hallucination_phrases:
+        for phrase in hallucination_phrases_2026:
             actionable_summary = actionable_summary.replace(phrase, "")
         
         # Clean up extra spaces and punctuation
@@ -233,35 +242,35 @@ class RSSFeedParser:
         
         return actionable_summary
     
-    def apply_quality_control(self, articles: List[Dict]) -> List[Dict]:
-        """Apply quality control to filter out hallucination-prone content"""
+    def apply_2026_quality_control(self, articles: List[Dict]) -> List[Dict]:
+        """Apply 2026 quality control with SVP-ready filter"""
         quality_articles = []
         
         for article in articles:
-            if self.is_high_quality(article):
+            if self.is_svp_ready(article):
                 quality_articles.append(article)
             else:
-                print(f"❌ LOW QUALITY: {article.get('title', '')[:50]}...")
+                print(f"❌ NOT SVP-READY: {article.get('title', '')[:50]}...")
         
         return quality_articles
     
     def is_high_quality(self, article: Dict) -> bool:
-        """Check if article meets quality standards"""
+        """Enhanced quality check for 2026 standards"""
         title = article.get('title', '')
         summary = article.get('summary', '')
         content = f"{title} {summary}"
         
-        # Quality criteria
-        hallucination_indicators = [
-            "seek solutions", "looking for solutions", "exploring options",
+        # 2026 hallucination indicators (more aggressive)
+        hallucination_phrases_2026 = [
+            "seek solutions", "monitoring situation", "hope of a swift reopening", 
+            "industry sources say", "reports suggest", "exploring options",
             "considering measures", "working on", "addressing concerns",
-            "monitoring situation", "keeping watch", "staying alert",
-            "in response to", "following reports", "amid concerns",
-            "may affect", "could impact", "potential impact", "possible disruption"
+            "keeping watch", "staying alert", "in response to", "following reports",
+            "amid concerns", "may affect", "could impact", "potential impact", "possible disruption"
         ]
         
         # Check for hallucination indicators
-        for indicator in hallucination_indicators:
+        for indicator in hallucination_phrases_2026:
             if indicator in content.lower():
                 return False
         
@@ -285,6 +294,33 @@ class RSSFeedParser:
         )
         
         return has_specific_info and has_specifics
+    
+    def is_svp_ready(self, article: Dict) -> bool:
+        """2026 SVP-ready quality check with data density requirements"""
+        content = f"{article.get('title', '')} {article.get('summary', '')}"
+        
+        # 2026 Quality Markers
+        has_vessel_identifier = bool(re.search(r'MV\s|MT\s|vessel|tanker|container', content, re.IGNORECASE))
+        has_date_time = bool(re.search(r'\d{1,2}\s(?:Mar|March|Feb|January|Feb|Febuary)', content, re.IGNORECASE))
+        has_hard_data = bool(re.search(r'\d+%', content)) or bool(re.search(r'\$\d+', content))
+        has_coordinates = bool(re.search(r'\d+°[NSEW]', content)) or bool(re.search(r'\d+\.\d+[NSEW]', content))
+        
+        # Debug output
+        print(f"🔍 2026 Quality Check:")
+        print(f"   Vessel ID: {has_vessel_identifier}")
+        print(f"   Date/Time: {has_date_time}")
+        print(f"   Hard Data: {has_hard_data}")
+        print(f"   Coordinates: {has_coordinates}")
+        
+        # Higher threshold for 2026 quality
+        base_quality = self.is_high_quality(article)
+        data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
+        
+        is_svp_ready = base_quality and data_density
+        
+        print(f"   SVP-Ready: {is_svp_ready}")
+        
+        return is_svp_ready
     
     def remove_duplicates(self, articles: List[Dict]) -> List[Dict]:
         """Remove duplicate articles based on content hash"""

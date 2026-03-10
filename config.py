@@ -137,7 +137,7 @@ BOURUGE_RELEVANCE = {
 EMAIL_CONFIG = {
     'recipient': os.getenv('LOGISTICS_EMAIL_RECIPIENT'),
     'sender': os.getenv('LOGISTICS_EMAIL_USER'),
-    'subject_prefix': '🚢 ADNOC/Borouge Global Logistics Alert',
+    'subject_prefix': '🚢 Global Logistics Alert',
     'max_items': 5
 }
 

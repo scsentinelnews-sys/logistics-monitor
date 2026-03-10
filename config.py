@@ -176,7 +176,7 @@ BOURUGE_RELEVANCE = {
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'significant investment', 'lab',
-        'research lab', 'innovation', 'digital', 'automation', 'robotics',
+        'research lab', 'innovation', 'automation', 'robotics',
         'share price', 'stock price', 'market analysis', 'trading',
         'earnings report', 'quarterly earnings', 'profit warning', 'revenue',
         'economic data', 'inflation data', 'gdp growth', 'interest rates',

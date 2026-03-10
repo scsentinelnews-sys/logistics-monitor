@@ -310,8 +310,12 @@ class RSSFeedParser:
         has_uae_port_focus = any(port.lower() in content.lower() for port in uae_port_entities)
         
         # Check for development/expansion keywords
-        development_keywords = ['expansion', 'development', 'capacity increase', 'new terminal', 'infrastructure', 'modernization']
+        development_keywords = ['expansion', 'development', 'capacity increase', 'new terminal', 'infrastructure', 'modernization', 'digital transformation']
         has_development_focus = any(keyword.lower() in content.lower() for keyword in development_keywords)
+        
+        # Check for operational keywords
+        operational_keywords = ['operations', 'efficiency', 'improved', 'reduced', 'delays', 'congestion']
+        has_operational_focus = any(keyword.lower() in content.lower() for keyword in operational_keywords)
         
         # Debug output
         print(f"🔍 2026 Quality Check:")
@@ -321,16 +325,20 @@ class RSSFeedParser:
         print(f"   Coordinates: {has_coordinates}")
         print(f"   UAE Port Focus: {has_uae_port_focus}")
         print(f"   Development Focus: {has_development_focus}")
+        print(f"   Operational Focus: {has_operational_focus}")
         
         # Relaxed threshold for 2026 quality
         base_quality = self.is_high_quality(article)
         
         # Different requirements for different types of news
         if has_uae_port_focus and has_development_focus:
-            # UAE port development news - relaxed requirements
-            data_density = has_hard_data or has_vessel_identifier
+            # UAE port development news - very relaxed requirements
+            data_density = has_hard_data or has_vessel_identifier or has_date_time
+        elif has_uae_port_focus and has_operational_focus:
+            # UAE port operations news - relaxed requirements
+            data_density = has_hard_data or has_vessel_identifier or has_date_time
         elif has_uae_port_focus:
-            # UAE port operations news - standard requirements
+            # UAE port general news - standard requirements
             data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
         else:
             # Other news - strict requirements

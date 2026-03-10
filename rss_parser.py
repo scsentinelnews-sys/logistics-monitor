@@ -1,56 +1,64 @@
 import feedparser
 import requests
 from datetime import datetime, timedelta
-import re
 from typing import List, Dict, Optional
 from config import RSS_SOURCES, BOURUGE_RELEVANCE, MONITORING_CONFIG
-
-# Import the tracker
-try:
-    from sent_articles_tracker import SentArticlesTracker
-    TRACKER_AVAILABLE = True
-except ImportError:
-    TRACKER_AVAILABLE = False
-    print("⚠️ SentArticlesTracker not available - duplicate prevention disabled")
+import hashlib
+import json
+import os
+import re
 
 class RSSFeedParser:
     def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'application/rss+xml, application/xml, text/xml',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
-        })
-        
-        # Initialize tracker if available
-        if TRACKER_AVAILABLE:
-            self.tracker = SentArticlesTracker()
-        else:
-            self.tracker = None
-    
-    def fetch_feed(self, source_name: str, source_url: str) -> Optional[List[Dict]]:
-        """Fetch and parse RSS feed from a source"""
+        self.sent_articles_tracker = None
         try:
-            response = self.session.get(source_url, timeout=30)
+            from sent_articles_tracker import SentArticlesTracker
+            self.sent_articles_tracker = SentArticlesTracker()
+        except ImportError:
+            print("Warning: SentArticlesTracker not available, duplicate prevention disabled")
+    
+    def fetch_and_filter_news(self) -> List[Dict]:
+        """Fetch and filter news from RSS feeds with enhanced quality control"""
+        all_articles = []
+        
+        for source_name, feed_url in RSS_SOURCES.items():
+            try:
+                print(f"Fetching from {source_name}...")
+                articles = self.fetch_feed(feed_url, source_name)
+                filtered_articles = self.filter_articles(articles, source_name)
+                all_articles.extend(filtered_articles)
+                print(f"✅ {source_name}: {len(filtered_articles)} relevant articles")
+            except Exception as e:
+                print(f"❌ Error fetching from {source_name}: {e}")
+        
+        # Remove duplicates
+        unique_articles = self.remove_duplicates(all_articles)
+        print(f"📊 Found {len(unique_articles)} unique relevant articles")
+        
+        # Apply quality control
+        quality_articles = self.apply_quality_control(unique_articles)
+        print(f"🎯 Quality articles: {len(quality_articles)}")
+        
+        return quality_articles
+    
+    def fetch_feed(self, feed_url: str, source_name: str) -> List[Dict]:
+        """Fetch articles from a single RSS feed"""
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+            response = requests.get(feed_url, headers=headers, timeout=10)
             response.raise_for_status()
-            
-            if 'captcha' in response.text.lower() or 'please enable js' in response.text.lower():
-                print(f"⚠️ {source_name}: Captcha/JS block detected, trying alternative...")
-                response = self.session.get(source_url, params={'format': 'xml'}, timeout=30)
             
             feed = feedparser.parse(response.content)
             articles = []
             
             for entry in feed.entries:
                 article = {
-                    'title': entry.title,
-                    'summary': getattr(entry, 'summary', ''),
-                    'content': getattr(entry, 'content', [{}])[0].get('value', '') if hasattr(entry, 'content') else '',
-                    'published': getattr(entry, 'published', ''),
-                    'link': getattr(entry, 'link', ''),
+                    'title': self.clean_text(entry.get('title', '')),
+                    'summary': self.clean_text(entry.get('summary', entry.get('description', ''))),
+                    'link': entry.get('link', ''),
+                    'published': entry.get('published', ''),
                     'source': source_name,
                     'category': 'Logistics Intelligence'
                 }
@@ -60,196 +68,245 @@ class RSSFeedParser:
             
         except Exception as e:
             print(f"Error fetching feed from {source_name}: {e}")
-            return None
+            return []
     
-    def is_within_time_window(self, published_date: str) -> bool:
-        """Check if article is within the alert window"""
-        try:
-            date_formats = [
-                '%a, %d %b %Y %H:%M:%S %Z',
-                '%a, %d %b %Y %H:%M:%S %z',
-                '%Y-%m-%dT%H:%M:%SZ',
-                '%Y-%m-%dT%H:%M:%S%z'
-            ]
-            
-            parsed_date = None
-            for fmt in date_formats:
-                try:
-                    parsed_date = datetime.strptime(published_date, fmt)
-                    if parsed_date.tzinfo is None:
-                        parsed_date = parsed_date.replace(tzinfo=datetime.now().astimezone().tzinfo)
-                    break
-                except ValueError:
-                    continue
-            
-            if parsed_date is None:
-                return False
-            
-            time_diff = datetime.now(parsed_date.tzinfo) - parsed_date
-            return time_diff.total_seconds() <= MONITORING_CONFIG['alert_window_hours'] * 3600
-            
-        except Exception as e:
-            print(f"Error parsing date: {e}")
-            return False
+    def clean_text(self, text: str) -> str:
+        """Clean and normalize text content"""
+        if not text:
+            return ""
+        
+        # Remove HTML tags
+        text = re.sub(r'<[^>]+>', '', text)
+        
+        # Remove extra whitespace
+        text = re.sub(r'\s+', ' ', text).strip()
+        
+        # Remove special characters that might cause issues
+        text = re.sub(r'[^\w\s\-.,;:!?()[\]{}"\'/]', '', text)
+        
+        return text
+    
+    def filter_articles(self, articles: List[Dict], source_name: str) -> List[Dict]:
+        """Filter articles based on relevance criteria with enhanced logic"""
+        relevant_articles = []
+        
+        for article in articles:
+            if self.is_borouge_relevant(article):
+                # Enhance article with actionable summary
+                enhanced_article = self.enhance_article(article)
+                relevant_articles.append(enhanced_article)
+        
+        return relevant_articles
     
     def is_borouge_relevant(self, article: Dict) -> bool:
-        """Decision Logic: Target specific logistics impacts"""
-        # Use .get() to handle missing keys safely
-        text = f"{article.get('title', '')} {article.get('summary', '')} {article.get('content', '')}".lower()
+        """Enhanced relevance check with stricter criteria"""
+        title = article.get('title', '').lower()
+        summary = article.get('summary', '').lower()
+        content = f"{title} {summary}"
         
-        print(f"🔍 Checking article: {article.get('title', 'No title')[:50]}...")
+        # Check blacklist first (filter out)
+        blacklist = BOURUGE_RELEVANCE.get('blacklist', [])
+        for blacklist_term in blacklist:
+            if blacklist_term.lower() in content:
+                print(f"❌ BLACKLISTED: ['{blacklist_term}']")
+                return False
         
-        # 1. Instant Discard if it contains Blacklisted words
-        blacklist_matches = [word for word in BOURUGE_RELEVANCE['blacklist'] if word.lower() in text]
-        if blacklist_matches:
-            print(f"❌ BLACKLISTED: {blacklist_matches}")
-            return False
+        # Enhanced relevance logic
+        entities = BOURUGE_RELEVANCE.get('entities', [])
+        locations = BOURUGE_RELEVANCE.get('ports_routes', [])
+        impacts = BOURUGE_RELEVANCE.get('impact_events', [])
         
-        # 2. Check for Primary Entities (Who)
-        entity_matches = [e for e in BOURUGE_RELEVANCE['entities'] if e.lower() in text]
-        has_entity = len(entity_matches) > 0
-        print(f"👥 Entities found: {entity_matches}")
+        # Check for entities + impact OR locations + impact
+        entities_found = [entity for entity in entities if entity.lower() in content]
+        locations_found = [location for location in locations if location.lower() in content]
+        impacts_found = [impact for impact in impacts if impact.lower() in content]
         
-        # 3. Check for Locations (Where)
-        location_matches = [l for l in BOURUGE_RELEVANCE['ports_routes'] if l.lower() in text]
-        has_location = len(location_matches) > 0
-        print(f"📍 Locations found: {location_matches}")
+        # Debug output
+        print(f"👥 Entities found: {entities_found}")
+        print(f"📍 Locations found: {locations_found}")
+        print(f"💥 Impacts found: {impacts_found}")
         
-        # 4. Check for Decision Triggers (What)
-        impact_matches = [i for i in BOURUGE_RELEVANCE['impact_events'] if i.lower() in text]
-        has_impact = len(impact_matches) > 0
-        print(f"💥 Impacts found: {impact_matches}")
+        # Enhanced relevance criteria
+        entity_impact_match = len(entities_found) > 0 and len(impacts_found) > 0
+        location_impact_match = len(locations_found) > 0 and len(impacts_found) > 0
         
-        # DECISION RULE: 
-        # Must have BOTH Entity AND Impact OR Location AND Impact
-        # This ensures actionable intelligence for decision making
-        is_relevant = (has_entity and has_impact) or (has_location and has_impact)
+        is_relevant = entity_impact_match or location_impact_match
         
-        print(f"✅ Relevant: {is_relevant} (Entity+Impact: {has_entity and has_impact}, Location+Impact: {has_location and has_impact})")
+        print(f"✅ Relevant: {is_relevant} (Entity+Impact: {entity_impact_match}, Location+Impact: {location_impact_match})")
         
         return is_relevant
     
-    def process_article(self, article: Dict, category: str) -> Optional[Dict]:
-        """Process a single article through all filters"""
-        # Time window check
-        if not self.is_within_time_window(article.get('published', '')):
-            return None
+    def enhance_article(self, article: Dict) -> Dict:
+        """Enhance article with actionable summary and key information"""
+        title = article.get('title', '')
+        summary = article.get('summary', '')
+        content = f"{title} {summary}"
         
-        # Relevance check
-        if not self.is_borouge_relevant(article):
-            return None
+        # Extract key information
+        key_entities = self.extract_key_entities(content)
+        key_locations = self.extract_key_locations(content)
+        key_impacts = self.extract_key_impacts(content)
         
-        # Create focused summary
-        summary = self.create_summary(article.get('content', ''), article.get('title', ''))
+        # Create actionable summary
+        actionable_summary = self.create_actionable_summary(title, summary, key_entities, key_locations, key_impacts)
         
-        return {
-            'title': article.get('title', ''),
-            'summary': summary,
-            'source': article.get('source', ''),
-            'category': category,
-            'link': article.get('link', ''),
-            'published': article.get('published', '')
-        }
+        # Enhanced article
+        enhanced_article = article.copy()
+        enhanced_article['summary'] = actionable_summary
+        enhanced_article['key_entities'] = key_entities
+        enhanced_article['key_locations'] = key_locations
+        enhanced_article['key_impacts'] = key_impacts
+        enhanced_article['actionable'] = len(key_impacts) > 0
+        
+        return enhanced_article
     
-    def create_summary(self, content: str, title: str) -> str:
-        """Create focused summary with specific decision-making facts"""
-        # Simple, safe keyword-based summary creation
-        summary_parts = []
+    def extract_key_entities(self, content: str) -> List[str]:
+        """Extract key entities from content"""
+        entities = BOURUGE_RELEVANCE.get('entities', [])
+        found_entities = []
         
-        # Check for financial impact keywords
-        financial_keywords = [
-            'million', 'billion', 'dollar', 'cost', 'price', 'increase', 'decrease', 
-            'surge', 'spike', 'drop', 'loss', 'profit', 'revenue'
-        ]
+        for entity in entities:
+            if entity.lower() in content.lower():
+                found_entities.append(entity)
         
-        # Check for operational impact keywords
-        operational_keywords = [
-            'delay', 'disruption', 'congestion', 'closure', 'suspension', 'strike',
-            'shortage', 'bottleneck', 'backlog', 'port', 'terminal', 'container'
-        ]
+        return found_entities[:3]  # Limit to top 3
+    
+    def extract_key_locations(self, content: str) -> List[str]:
+        """Extract key locations from content"""
+        locations = BOURUGE_RELEVANCE.get('ports_routes', [])
+        found_locations = []
         
-        # Check for shipping keywords
-        shipping_keywords = [
-            'maersk', 'msc', 'cma cgm', 'hapag-lloyd', 'one', 'evergreen', 'cosco',
-            'vessel', 'ship', 'tanker', 'carrier', 'shipping line'
-        ]
+        for location in locations:
+            if location.lower() in content.lower():
+                found_locations.append(location)
         
-        # Check for location keywords
-        location_keywords = [
-            'suez canal', 'strait of hormuz', 'panama canal', 'middle east',
-            'khalifa port', 'jebel ali', 'singapore', 'rotterdam', 'shanghai'
-        ]
+        return found_locations[:3]  # Limit to top 3
+    
+    def extract_key_impacts(self, content: str) -> List[str]:
+        """Extract key impacts from content"""
+        impacts = BOURUGE_RELEVANCE.get('impact_events', [])
+        found_impacts = []
         
-        # Extract sentences with key information
-        sentences = re.split(r'[.!?]+', content)
-        for sentence in sentences:
-            sentence = sentence.strip()
-            if len(sentence) < 20:
-                continue
-            
-            # Check if sentence contains important keywords
-            sentence_lower = sentence.lower()
-            has_financial = any(keyword in sentence_lower for keyword in financial_keywords)
-            has_operational = any(keyword in sentence_lower for keyword in operational_keywords)
-            has_shipping = any(keyword in sentence_lower for keyword in shipping_keywords)
-            has_location = any(keyword in sentence_lower for keyword in location_keywords)
-            
-            # Add sentence if it contains important information
-            if (has_financial or has_operational) and (has_shipping or has_location):
-                summary_parts.append(sentence)
-                if len(summary_parts) >= 2:  # Limit to 2 sentences
-                    break
+        for impact in impacts:
+            if impact.lower() in content.lower():
+                found_impacts.append(impact)
         
-        # Create summary
-        if summary_parts:
-            summary = ' | '.join(summary_parts)
-            if len(summary) > MONITORING_CONFIG['max_summary_length']:
-                summary = summary[:MONITORING_CONFIG['max_summary_length']] + "..."
+        return found_impacts[:3]  # Limit to top 3
+    
+    def create_actionable_summary(self, title: str, summary: str, entities: List[str], locations: List[str], impacts: List[str]) -> str:
+        """Create actionable summary for SVP consumption"""
+        # Start with the main point
+        actionable_parts = []
+        
+        # Add key impact information
+        if impacts:
+            actionable_parts.append(f"Impact: {', '.join(impacts[:2])}")
+        
+        # Add location information
+        if locations:
+            actionable_parts.append(f"Location: {', '.join(locations[:2])}")
+        
+        # Add entity information
+        if entities:
+            actionable_parts.append(f"Entities: {', '.join(entities[:2])}")
+        
+        # Create actionable summary
+        if actionable_parts:
+            actionable_summary = f"{title}. {' | '.join(actionable_parts)}."
         else:
-            # Fallback to title with key entities
-            summary = title[:MONITORING_CONFIG['max_summary_length']]
+            actionable_summary = f"{title}. {summary[:200]}..."
         
-        return summary
+        # Remove hallucination-prone phrases
+        hallucination_phrases = [
+            "seek solutions", "looking for solutions", "exploring options", 
+            "considering measures", "working on", "addressing concerns",
+            "monitoring situation", "keeping watch", "staying alert",
+            "in response to", "following reports", "amid concerns"
+        ]
+        
+        for phrase in hallucination_phrases:
+            actionable_summary = actionable_summary.replace(phrase, "")
+        
+        # Clean up extra spaces and punctuation
+        actionable_summary = re.sub(r'\s+', ' ', actionable_summary).strip()
+        actionable_summary = re.sub(r'\.\s*\.', '.', actionable_summary)
+        
+        return actionable_summary
     
-    def fetch_all_feeds(self) -> List[Dict]:
-        """Fetch and process all RSS feeds"""
-        all_articles = []
+    def apply_quality_control(self, articles: List[Dict]) -> List[Dict]:
+        """Apply quality control to filter out hallucination-prone content"""
+        quality_articles = []
         
-        for source_name, source_url in RSS_SOURCES.items():
-            print(f"Fetching from {source_name}...")
-            articles = self.fetch_feed(source_name, source_url)
+        for article in articles:
+            if self.is_high_quality(article):
+                quality_articles.append(article)
+            else:
+                print(f"❌ LOW QUALITY: {article.get('title', '')[:50]}...")
+        
+        return quality_articles
+    
+    def is_high_quality(self, article: Dict) -> bool:
+        """Check if article meets quality standards"""
+        title = article.get('title', '')
+        summary = article.get('summary', '')
+        content = f"{title} {summary}"
+        
+        # Quality criteria
+        hallucination_indicators = [
+            "seek solutions", "looking for solutions", "exploring options",
+            "considering measures", "working on", "addressing concerns",
+            "monitoring situation", "keeping watch", "staying alert",
+            "in response to", "following reports", "amid concerns",
+            "may affect", "could impact", "potential impact", "possible disruption"
+        ]
+        
+        # Check for hallucination indicators
+        for indicator in hallucination_indicators:
+            if indicator in content.lower():
+                return False
+        
+        # Check for specific, actionable information
+        has_specific_info = (
+            article.get('key_entities') or 
+            article.get('key_locations') or 
+            article.get('key_impacts')
+        )
+        
+        # Check length (too short might be filler)
+        min_length = 50
+        if len(content) < min_length:
+            return False
+        
+        # Check for specific numbers, dates, or named entities
+        has_specifics = bool(
+            re.search(r'\d+', content) or  # Numbers
+            any(entity.lower() in content.lower() for entity in BOURUGE_RELEVANCE.get('entities', [])) or
+            any(location.lower() in content.lower() for location in BOURUGE_RELEVANCE.get('ports_routes', []))
+        )
+        
+        return has_specific_info and has_specifics
+    
+    def remove_duplicates(self, articles: List[Dict]) -> List[Dict]:
+        """Remove duplicate articles based on content hash"""
+        if not self.sent_articles_tracker:
+            return articles
+        
+        seen_hashes = set()
+        unique_articles = []
+        
+        for article in articles:
+            # Create hash from title and summary
+            content = f"{article.get('title', '')} {article.get('summary', '')}"
+            content_hash = hashlib.md5(content.encode()).hexdigest()
             
-            if articles:
-                for article in articles:
-                    processed = self.process_article(article, 'Logistics Intelligence')
-                    if processed:
-                        all_articles.append(processed)
+            if content_hash not in seen_hashes:
+                seen_hashes.add(content_hash)
+                unique_articles.append(article)
         
-        # Sort by publication date (most recent first)
-        all_articles.sort(key=lambda x: x['published'], reverse=True)
-        
-        return all_articles
-    
-    def fetch_and_filter_news(self) -> List[Dict]:
-        """Main function to fetch and filter logistics intelligence"""
-        print("🚢 Starting logistics intelligence fetch...")
-        
-        # Fetch all articles and process them directly
-        all_articles = self.fetch_all_feeds()
-        
-        print(f"📊 Found {len(all_articles)} relevant articles")
-        
-        # Filter out already sent articles if tracker is available
-        if self.tracker:
-            new_articles = self.tracker.filter_new_articles(all_articles)
-            print(f"📧 {len(new_articles)} new articles (duplicates removed)")
-            return new_articles
-        else:
-            print("⚠️ No duplicate prevention available - sending all articles")
-            return all_articles
+        return unique_articles
 
-# Standalone function for easy import
+# Standalone function for compatibility
 def fetch_and_filter_news() -> List[Dict]:
-    """Standalone function to fetch and filter logistics intelligence"""
+    """Standalone function for fetching and filtering news"""
     parser = RSSFeedParser()
     return parser.fetch_and_filter_news()

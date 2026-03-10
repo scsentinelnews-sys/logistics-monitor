@@ -20,7 +20,7 @@ RSS_SOURCES = {
     'argus_media_energy': 'https://www.argusmedia.com/en/rss-feeds'
 }
 
-# Enhanced Precision Filtering Logic - Professional Logistics Intelligence
+# Enhanced 2026 Precision Filtering Logic - Professional Logistics Intelligence
 BOURUGE_RELEVANCE = {
     # GATE 1: PRIMARY STAKEHOLDERS (ADNOC/Borouge + Industry Standards)
     'entities': [
@@ -62,7 +62,7 @@ BOURUGE_RELEVANCE = {
         'charter rates', 'bunker adjustment'
     ],
     
-    # GATE 3: OPERATIONAL IMPACT TRIGGERS (Professional Events)
+    # GATE 3: 2026 OPERATIONAL IMPACT TRIGGERS (Enhanced with New Technical Risks)
     'impact_events': [
         # Disruptions & Delays (Professional Terms)
         'congestion', 'delay', 'delays', 'disruption', 'disruptions', 'blank sailing', 'force majeure',
@@ -75,6 +75,10 @@ BOURUGE_RELEVANCE = {
         
         # Market & Cost Impacts (Professional Terms)
         'surcharge', 'rate hike', 'rate increase', 'shortage', 'shortages', 'bottleneck', 'bottlenecks',
+        
+        # 2026 NEW TECHNICAL RISKS
+        'GNSS', 'GPS spoofing', 'UAV', 'projectile', 'war risk surcharge', 'WRS',
+        'blank sailing', 'diversion', 'Strait of Hormuz closure',
         
         # Comprehensive Impact Events
         'production halt', 'operational disruption', 'facility damage',
@@ -158,12 +162,12 @@ EMAIL_CONFIG = {
     'max_items': 5
 }
 
-# Monitoring Configuration - Professional Settings
+# Monitoring Configuration - 30-MINUTE TIME WINDOW
 MONITORING_CONFIG = {
     'check_interval_minutes': 30,
-    'alert_window_hours': 24,
+    'alert_window_hours': 0.5,  # 30 MINUTES ONLY
     'max_summary_length': 250,
-    'alert_threshold_hours': 24,
+    'alert_threshold_hours': 0.5,  # 30 MINUTES ONLY
     'summary_min_length': 50,
     'summary_max_length': 250,
     'max_daily_items': 5

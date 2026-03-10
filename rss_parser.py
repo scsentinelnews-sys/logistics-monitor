@@ -18,7 +18,7 @@ class RSSFeedParser:
             print("Warning: SentArticlesTracker not available, duplicate prevention disabled")
     
     def fetch_and_filter_news(self) -> List[Dict]:
-        """Fetch and filter news with 2026 risk filter and SVP-ready quality"""
+        """Fetch and filter news with domain lockdown and SVP-ready quality"""
         all_articles = []
         
         for source_name, feed_url in RSS_SOURCES.items():
@@ -35,7 +35,7 @@ class RSSFeedParser:
         unique_articles = self.remove_duplicates(all_articles)
         print(f"📊 Found {len(unique_articles)} unique relevant articles")
         
-        # Apply 2026 quality control
+        # Apply 2026 quality control with domain lockdown
         quality_articles = self.apply_2026_quality_control(unique_articles)
         print(f"🎯 2026 SVP-ready articles: {len(quality_articles)}")
         
@@ -87,11 +87,11 @@ class RSSFeedParser:
         return text
     
     def filter_articles(self, articles: List[Dict], source_name: str) -> List[Dict]:
-        """Filter articles with 2026 risk-aware criteria"""
+        """Filter articles with 2026 risk-aware criteria and domain lockdown"""
         relevant_articles = []
         
         for article in articles:
-            if self.is_2026_relevant(article):
+            if self.is_2026_relevant(article) and self.is_in_correct_domain(article):
                 # Enhance article with 2026 SVP summary
                 enhanced_article = self.enhance_article(article)
                 relevant_articles.append(enhanced_article)
@@ -139,6 +139,45 @@ class RSSFeedParser:
         print(f"✅ 2026 Relevant: {is_relevant} (Entity+Impact: {entity_impact_match}, Location+Impact: {location_impact_match})")
         
         return is_relevant
+    
+    def is_in_correct_domain(self, article: Dict) -> bool:
+        """Domain Lockdown: The "Bouncer" for perfect filtering"""
+        content = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+        
+        # 1. HARD BLACKLIST (The "Kill List" for things like Car Loans/Brazil/Retail)
+        kill_list = [
+            'car loan', 'subprime', 'consumer credit', 'retail banking',
+            'brazil', 'solar farm', 'residential', 'luxury', 'supermarket',
+            'automotive', 'vehicle', 'car', 'truck', 'suv', 'sedan',
+            'energy price', 'oil price', 'stock market', 'share price',
+            'retail sales', 'consumer spending', 'financial services',
+            'investment banking', 'personal finance', 'corporate earnings',
+            'real estate', 'hospitality', 'tourism', 'entertainment',
+            'fashion', 'sports', 'celebrity', 'politics'
+        ]
+        if any(bad_word in content for bad_word in kill_list):
+            print(f"🚫 DOMAIN LOCKDOWN: ['{bad_word}'] found - BLOCKED")
+            return False
+        
+        # 2. SECTOR WHITELIST (Must contain at least one of these core logistics concepts)
+        core_sectors = [
+            'maritime', 'shipping', 'port', 'terminal', 'freight',
+            'petrochemical', 'polymer', 'crude', 'lng', 'tanker',
+            'supply chain', 'warehouse', 'vessel', 'container'
+        ]
+        
+        # 3. STRATEGIC WHITELIST (UAE / ADNOC / Borouge context)
+        strategic_entities = ['adnoc', 'borouge', 'uae', 'abu dhabi', 'dubai', 'khalifa', 'jebel ali']
+        
+        # Must be EITHER a core logistics topic OR a strategic UAE entity
+        has_sector = any(sector in content for sector in core_sectors)
+        has_strategy = any(ent in content for ent in strategic_entities)
+        
+        domain_ok = has_sector or has_strategy
+        
+        print(f"🔍 DOMAIN CHECK: Sector={has_sector} | Strategy={has_strategy} | Domain OK: {domain_ok}")
+        
+        return domain_ok
     
     def enhance_article(self, article: Dict) -> Dict:
         """Enhance article with 2026 SVP-ready summary"""
@@ -243,7 +282,7 @@ class RSSFeedParser:
         return actionable_summary
     
     def apply_2026_quality_control(self, articles: List[Dict]) -> List[Dict]:
-        """Apply 2026 quality control with SVP-ready filter"""
+        """Apply 2026 quality control with domain lockdown"""
         quality_articles = []
         
         for article in articles:
@@ -296,7 +335,7 @@ class RSSFeedParser:
         return has_specifics and has_specifics
     
     def is_svp_ready(self, article: Dict) -> bool:
-        """2026 SVP-ready quality check with strategic override for UAE infrastructure"""
+        """2026 SVP-ready quality check with domain lockdown"""
         content = f"{article.get('title', '')} {article.get('summary', '')}"
         
         # 2026 Quality Markers

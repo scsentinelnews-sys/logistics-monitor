@@ -293,10 +293,10 @@ class RSSFeedParser:
             any(location.lower() in content.lower() for location in BOURUGE_RELEVANCE.get('ports_routes', []))
         )
         
-        return has_specific_info and has_specifics
+        return has_specifics and has_specifics
     
     def is_svp_ready(self, article: Dict) -> bool:
-        """2026 SVP-ready quality check with data density requirements"""
+        """2026 SVP-ready quality check with relaxed requirements for UAE port news"""
         content = f"{article.get('title', '')} {article.get('summary', '')}"
         
         # 2026 Quality Markers
@@ -305,16 +305,36 @@ class RSSFeedParser:
         has_hard_data = bool(re.search(r'\d+%', content)) or bool(re.search(r'\$\d+', content))
         has_coordinates = bool(re.search(r'\d+°[NSEW]', content)) or bool(re.search(r'\d+\.\d+[NSEW]', content))
         
+        # Check for UAE port/terminal focus (relaxed requirements)
+        uae_port_entities = ['Khalifa Port', 'Jebel Ali Port', 'Ruwais', 'AD Ports', 'KIZAD', 'DP World']
+        has_uae_port_focus = any(port.lower() in content.lower() for port in uae_port_entities)
+        
+        # Check for development/expansion keywords
+        development_keywords = ['expansion', 'development', 'capacity increase', 'new terminal', 'infrastructure', 'modernization']
+        has_development_focus = any(keyword.lower() in content.lower() for keyword in development_keywords)
+        
         # Debug output
         print(f"🔍 2026 Quality Check:")
         print(f"   Vessel ID: {has_vessel_identifier}")
         print(f"   Date/Time: {has_date_time}")
         print(f"   Hard Data: {has_hard_data}")
         print(f"   Coordinates: {has_coordinates}")
+        print(f"   UAE Port Focus: {has_uae_port_focus}")
+        print(f"   Development Focus: {has_development_focus}")
         
-        # Higher threshold for 2026 quality
+        # Relaxed threshold for 2026 quality
         base_quality = self.is_high_quality(article)
-        data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
+        
+        # Different requirements for different types of news
+        if has_uae_port_focus and has_development_focus:
+            # UAE port development news - relaxed requirements
+            data_density = has_hard_data or has_vessel_identifier
+        elif has_uae_port_focus:
+            # UAE port operations news - standard requirements
+            data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
+        else:
+            # Other news - strict requirements
+            data_density = (has_vessel_identifier or has_hard_data or has_coordinates)
         
         is_svp_ready = base_quality and data_density
         

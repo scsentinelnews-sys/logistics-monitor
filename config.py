@@ -112,6 +112,10 @@ BOURUGE_RELEVANCE = {
         'port operations', 'terminal operations', 'yard congestion', 'terminal yard',
         'berth delay', 'berth congestion', 'container yard', 'container terminal',
         
+        # Development & Expansion (UAE Port Focus)
+        'expansion', 'development', 'capacity increase', 'new terminal', 'terminal development',
+        'infrastructure', 'digital transformation', 'modernization', 'upgrade', 'improvement',
+        
         # Comprehensive Impact Events
         'production halt', 'operational disruption', 'facility damage',
         'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
@@ -134,7 +138,7 @@ BOURUGE_RELEVANCE = {
         'international supply chain', 'worldwide logistics'
     ],
     
-    # GATE 4: ENHANCED BLACKLIST (Filter Non-Logistics Content)
+    # GATE 4: ENHANCED BLACKLIST (Fixed - Removed Logistics Terms)
     'blacklist': [
         # Automotive Industry (Filter Out - Not Logistics)
         'car', 'cars', 'automotive', 'automobile', 'vehicle', 'vehicles', 'suv', 'sedan', 'truck', 'trucks',
@@ -154,7 +158,7 @@ BOURUGE_RELEVANCE = {
         'real estate', 'hospitality', 'tourism', 'sports', 'celebrity', 
         'lifestyle', 'fintech', 'bitcoin', 'crypto', 'fashion', 'retail sales',
         
-        # Comprehensive Blacklist
+        # Comprehensive Blacklist (Removed logistics terms)
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'culture', 
         'entertainment', 'stock market', 'driving', 'economy', 'economic',
         'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming',
@@ -171,7 +175,7 @@ BOURUGE_RELEVANCE = {
         'city council', 'state government', 'local politics', 'regional politics',
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
-        'venture capital', 'funding', 'investment', 'significant investment', 'lab',
+        'venture capital', 'funding', 'significant investment', 'lab',
         'research lab', 'innovation', 'digital', 'automation', 'robotics',
         'share price', 'stock price', 'market analysis', 'trading',
         'earnings report', 'quarterly earnings', 'profit warning', 'revenue',

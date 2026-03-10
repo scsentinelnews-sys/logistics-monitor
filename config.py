@@ -84,20 +84,29 @@ BOURUGE_RELEVANCE = {
         'bound containers', 'gulf-bound', 'transit time', 'lead time'
     ],
     
-    # Tier 4: Enhanced Blacklist (Filter General Oil/Market News)
+    # Tier 4: Enhanced Blacklist (Filter General Tech/AI/Oil/Market News)
     'blacklist': [
+        # Technology & AI (Filter Out - High Priority)
+        'nvidia', 'ai', 'artificial intelligence', 'machine learning', 'thinking machines',
+        'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
+        'venture capital', 'funding', 'investment', 'significant investment', 'lab',
+        'research lab', 'innovation', 'digital', 'automation', 'robotics',
+        
         # General Oil/Market News (Filter Out)
         'oil price', 'oil prices', 'crude oil price', 'crude oil prices', 'energy prices',
         'stock market', 'share price', 'stock price', 'market analysis', 'trading',
         'earnings report', 'quarterly earnings', 'profit warning', 'revenue',
         'economic data', 'inflation data', 'gdp growth', 'interest rates',
+        
         # Non-Logistics Business (Filter Out)
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'lifestyle', 'culture', 'tourism', 
         'hospitality', 'real estate', 'entertainment', 'fintech', 'celebrity', 'sports',
         'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming', 'fashion',
-        'social media', 'venture capital', 'funding', 'investment banking', 'startup', 'personal finance', 'technology',
+        'social media', 'investment banking', 'personal finance',
+        
         # General Business (Filter Out)
-        'retail sales', 'consumer spending', 'auto sales', 'housing market', 'job market'
+        'retail sales', 'consumer spending', 'auto sales', 'housing market', 'job market',
+        'corporate earnings', 'business news', 'company news', 'executive news'
     ]
 }
 

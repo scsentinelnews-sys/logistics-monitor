@@ -16,21 +16,21 @@ RSS_SOURCES = {
     'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
 }
 
-# Enhanced Logistics Intelligence - Ruwais Abu Dhabi UAE Priority
+# Enhanced Logistics Intelligence - Core Logistics Focus
 BOURUGE_RELEVANCE = {
     # Tier 1: Primary Stakeholders (Decision Impact)
     'entities': [
-        # ADNOC & Borouge (Highest Priority)
-        'ADNOC', 'Borouge', 'Abu Dhabi National Oil Company',
-        # Major Container Lines (Direct Impact on Operations)
+        # Major Container Lines (Highest Priority)
         'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
         # Logistics & Shipping Terms (Direct Impact)
         'shipping', 'container', 'vessel', 'port', 'logistics', 'freight', 'cargo', 'tanker', 'carrier', 'shipping line',
         'supply chain', 'warehouse', 'distribution', 'transport', 'delivery', 'trucking', 'railway',
+        # ADNOC & Borouge (UAE Priority)
+        'ADNOC', 'Borouge', 'Abu Dhabi National Oil Company',
         # Additional Business Entities (Market Impact)
         'DHL', 'FedEx', 'UPS', 'DB Schenker', 'Kuehne + Nagel', 'Expeditors',
         'Walmart', 'Amazon', 'Target', 'Home Depot', 'IKEA', 'Tesla',
-        # Energy & Commodities (Direct Impact)
+        # Energy & Commodities (Logistics Impact Only)
         'Shell', 'BP', 'ExxonMobil', 'Chevron', 'TotalEnergies',
         'OPEC', 'IEA',
         # UAE Specific Entities
@@ -39,17 +39,13 @@ BOURUGE_RELEVANCE = {
     
     # Tier 2: Critical Locations (Operations Impact)
     'ports_routes': [
-        # Ruwais Abu Dhabi UAE (Highest Priority - Always Catch)
+        # UAE Critical Locations (Highest Priority)
         'Ruwais', 'Ruwais Abu Dhabi', 'Ruwais UAE', 'Ruwais industrial', 'Ruwais refinery', 'Ruwais complex',
-        # UAE Critical Locations (Direct Impact)
         'Jebel Ali', 'Khalifa Port', 'Abu Dhabi', 'Dubai', 'Sharjah', 'Fujairah', 'Sohar', 'Mussafah',
         'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
-        # ADNOC/Borouge Specific Locations
-        'Borouge plant', 'Borouge complex', 'ADNOC processing', 'ADNOC refinery',
-        # Gulf Critical Locations (Direct Impact)
-        'Strait of Hormuz', 'Bab el-Mandeb', 'Persian Gulf', 'Gulf of Oman', 'Arabian Gulf',
         # Global Maritime Chokepoints (Supply Chain Impact)
-        'Suez Canal', 'Strait of Malacca', 'Panama Canal',
+        'Strait of Hormuz', 'Bab el-Mandeb', 'Suez Canal', 'Strait of Malacca', 'Panama Canal',
+        'Persian Gulf', 'Gulf of Oman', 'Arabian Gulf',
         # Major Global Ports (Operations Impact)
         'Singapore', 'Rotterdam', 'Shanghai', 'Ningbo', 'Hong Kong', 'Busan', 'Los Angeles', 'Long Beach',
         'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah', 'Genoa', 'Felixstowe', 'Le Havre', 'Southampton', 'Charleston',
@@ -57,47 +53,51 @@ BOURUGE_RELEVANCE = {
         'Middle East', 'Gulf region', 'Red Sea', 'Cape of Good Hope', 'Indian Ocean', 'Mediterranean Sea'
     ],
     
-    # Tier 3: Decision Triggers (Specific Impacts - Enhanced)
+    # Tier 3: Decision Triggers (Logistics-Focused Impacts)
     'impact_events': [
-        # Ruwais Abu Dhabi UAE Attack Priority (Always Catch)
+        # Service Operations (Highest Priority)
+        'resume', 'resumes', 'resumed', 'restart', 'service resume', 'vessels resume',
+        'suspension', 'suspended', 'service suspension', 'blank sailing', 'cancellation',
+        'delay', 'delays', 'disruption', 'disruptions', 'schedule changes', 'route changes',
+        # Security & Safety Incidents (Critical Priority)
         'fire', 'fire attack', 'attack', 'hit', 'strike', 'assault', 'explosion', 'blast',
         'security breach', 'sabotage', 'incident', 'accident', 'security incident', 'terror attack',
         'emergency', 'crisis', 'damage', 'destruction', 'threat', 'warning', 'alert',
-        # Production & Operations Impact (Direct Impact)
-        'production halt', 'shutdown', 'suspension', 'operational disruption', 'facility damage',
-        'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
         # Port Operations (Direct Impact)
         'congestion', 'port congestion', 'port closure', 'port suspension', 'port disruption',
         'port delay', 'port backlog', 'port strike', 'severe disruption', 'yard congestion',
+        'bottleneck', 'bottlenecks', 'overcapacity', 'underutilization',
         # Shipping Operations (Schedule Impact)
-        'delay', 'delays', 'disruption', 'disruptions', 'blank sailing', 'schedule changes',
-        'service suspension', 'route changes', 'capacity constraints', 'total suspension',
-        'suspension', 'reroute', 'reroutes', 'detour', 'detours',
+        'vessel', 'ship', 'container ship', 'tanker', 'carrier', 'shipping line',
+        'reroute', 'reroutes', 'detour', 'detours', 'capacity constraints',
+        # Market & Cost Impacts (Logistics-Focused Only)
+        'freight rates', 'rate surge', 'price surge', 'cost increase', 'surcharge', 'rate hike',
+        'shortage', 'shortages', 'equipment shortage', 'container shortage', 'labor shortage',
+        # Production & Operations Impact (Direct Impact)
+        'production halt', 'shutdown', 'operational disruption', 'facility damage',
+        'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
         # Safety & Security (Risk Impact)
         'ship attack', 'piracy', 'detention', 'seizure', 'collision', 'grounding',
         'mechanical failure', 'weather disruption', 'security concerns',
-        # Market & Cost Impacts (Financial Impact)
-        'surcharge', 'rate hike', 'rate increase', 'shortage', 'shortages', 'bottleneck', 'bottlenecks',
-        'freight rates', 'rate surge', 'price surge', 'cost increase', '15%', '40%', 'acute',
         # Supply Chain Impacts (Operational Impact)
-        'overcapacity', 'underutilization', 'equipment shortage', 'labor shortage', 'customs delay',
-        'weather disruption', 'mechanical failure', 'technical issue', 'operational issue',
-        'pile up', 'piling up', 'bound containers', 'gulf-bound',
-        # Business Impacts (Strategic Impact)
-        'profit warning', 'revenue decline', 'margin pressure', 'earnings report',
-        'demand surge', 'demand drop', 'capacity issues', 'cost cutting', 'restructuring',
-        # Market Impacts (Price Impact)
-        'oil price', 'oil prices', 'crude oil', 'natural gas', 'energy prices',
-        'polymer prices', 'plastic prices', 'feedstock prices', 'commodity prices',
-        'inflation', 'deflation', 'recession', 'market volatility'
+        'customs delay', 'technical issue', 'operational issue', 'pile up', 'piling up',
+        'bound containers', 'gulf-bound', 'transit time', 'lead time'
     ],
     
-    # Tier 4: The "Noise" Filter (Refined - Allow Real UAE Security Content)
+    # Tier 4: Enhanced Blacklist (Filter General Oil/Market News)
     'blacklist': [
+        # General Oil/Market News (Filter Out)
+        'oil price', 'oil prices', 'crude oil price', 'crude oil prices', 'energy prices',
+        'stock market', 'share price', 'stock price', 'market analysis', 'trading',
+        'earnings report', 'quarterly earnings', 'profit warning', 'revenue',
+        'economic data', 'inflation data', 'gdp growth', 'interest rates',
+        # Non-Logistics Business (Filter Out)
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'lifestyle', 'culture', 'tourism', 
-        'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech', 'celebrity', 'sports',
+        'hospitality', 'real estate', 'entertainment', 'fintech', 'celebrity', 'sports',
         'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming', 'fashion',
-        'social media', 'venture capital', 'funding', 'investment banking', 'startup', 'personal finance', 'technology'
+        'social media', 'venture capital', 'funding', 'investment banking', 'startup', 'personal finance', 'technology',
+        # General Business (Filter Out)
+        'retail sales', 'consumer spending', 'auto sales', 'housing market', 'job market'
     ]
 }
 

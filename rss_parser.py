@@ -149,11 +149,8 @@ class RSSFeedParser:
             'car loan', 'subprime', 'consumer credit', 'retail banking',
             'brazil', 'solar farm', 'residential', 'luxury', 'supermarket',
             'automotive', 'vehicle', 'car', 'truck', 'suv', 'sedan',
-            'energy price', 'oil price', 'stock market', 'share price',
-            'retail sales', 'consumer spending', 'financial services',
-            'investment banking', 'personal finance', 'corporate earnings',
-            'real estate', 'hospitality', 'tourism', 'entertainment',
-            'fashion', 'sports', 'celebrity', 'politics'
+            'energy price', 'oil price', 'stock market', 'share price', 'retail sales', 'consumer spending',
+            'financial services', 'investment banking', 'personal finance', 'corporate earnings'
         ]
         if any(bad_word in content for bad_word in kill_list):
             print(f"🚫 DOMAIN LOCKDOWN: ['{bad_word}'] found - BLOCKED")
@@ -269,7 +266,7 @@ class RSSFeedParser:
             "industry sources say", "reports suggest", "exploring options",
             "considering measures", "working on", "addressing concerns",
             "keeping watch", "staying alert", "in response to", "following reports",
-            "amid concerns", "may affect", "could impact", "potential impact"
+            "amid concerns", "may affect", "could impact", "potential impact", "possible disruption"
         ]
         
         for phrase in hallucination_phrases_2026:
@@ -359,17 +356,6 @@ class RSSFeedParser:
         # Check for any numbers (very relaxed)
         has_any_numbers = bool(re.search(r'\d+', content))
         
-        # Debug output
-        print(f"🔍 2026 Quality Check:")
-        print(f"   Vessel ID: {has_vessel_identifier}")
-        print(f"   Date/Time: {has_date_time}")
-        print(f"   Hard Data: {has_hard_data}")
-        print(f"   Coordinates: {has_coordinates}")
-        print(f"   UAE Port Focus: {has_uae_port_focus}")
-        print(f"   Development Focus: {has_development_focus}")
-        print(f"   Operational Focus: {has_operational_focus}")
-        print(f"   Any Numbers: {has_any_numbers}")
-        
         # Base quality check
         base_quality = self.is_high_quality(article)
         
@@ -383,6 +369,16 @@ class RSSFeedParser:
         is_strategic_uae_news = any(loc in content_lower for loc in strategic_locations) and \
                             any(act in content_lower for act in strategic_actions)
         
+        # Debug output
+        print(f"🔍 2026 Quality Check:")
+        print(f"   Vessel ID: {has_vessel_identifier}")
+        print(f"   Date/Time: {has_date_time}")
+        print(f"   Hard Data: {has_hard_data}")
+        print(f"   Coordinates: {has_coordinates}")
+        print(f"   UAE Port Focus: {has_uae_port_focus}")
+        print(f"   Development Focus: {has_development_focus}")
+        print(f"   Operational Focus: {has_operational_focus}")
+        print(f"   Any Numbers: {has_any_numbers}")
         print(f"   Strategic UAE News: {is_strategic_uae_news}")
         
         # Data density calculation

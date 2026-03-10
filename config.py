@@ -16,7 +16,7 @@ RSS_SOURCES = {
     'reuters_commodities': 'https://www.reuters.com/rssFeed/commodities',
 }
 
-# Enhanced Logistics Intelligence - ADNOC/Borouge Specific Focus
+# Enhanced Logistics Intelligence - Ruwais Abu Dhabi UAE Priority
 BOURUGE_RELEVANCE = {
     # Tier 1: Primary Stakeholders (Decision Impact)
     'entities': [
@@ -39,11 +39,13 @@ BOURUGE_RELEVANCE = {
     
     # Tier 2: Critical Locations (Operations Impact)
     'ports_routes': [
+        # Ruwais Abu Dhabi UAE (Highest Priority - Always Catch)
+        'Ruwais', 'Ruwais Abu Dhabi', 'Ruwais UAE', 'Ruwais industrial', 'Ruwais refinery', 'Ruwais complex',
         # UAE Critical Locations (Direct Impact)
-        'Ruwais', 'Ruwais refinery', 'Ruwais industrial', 'Ruwais complex', 'Jebel Ali', 'Khalifa Port', 'Abu Dhabi', 'Dubai', 'Sharjah',
-        'Fujairah', 'Sohar', 'Mussafah', 'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
+        'Jebel Ali', 'Khalifa Port', 'Abu Dhabi', 'Dubai', 'Sharjah', 'Fujairah', 'Sohar', 'Mussafah',
+        'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
         # ADNOC/Borouge Specific Locations
-        'Ruwais petrochemical', 'Ruwais refinery complex', 'Borouge plant', 'ADNOC processing',
+        'Borouge plant', 'Borouge complex', 'ADNOC processing', 'ADNOC refinery',
         # Gulf Critical Locations (Direct Impact)
         'Strait of Hormuz', 'Bab el-Mandeb', 'Persian Gulf', 'Gulf of Oman', 'Arabian Gulf',
         # Global Maritime Chokepoints (Supply Chain Impact)
@@ -57,9 +59,10 @@ BOURUGE_RELEVANCE = {
     
     # Tier 3: Decision Triggers (Specific Impacts - Enhanced)
     'impact_events': [
-        # Security & Safety Incidents (Critical Impact)
-        'fire', 'fire attack', 'explosion', 'blast', 'incident', 'accident', 'security incident', 'terror attack',
-        'attack', 'security breach', 'sabotage', 'damage', 'destruction', 'emergency', 'crisis',
+        # Ruwais Abu Dhabi UAE Attack Priority (Always Catch)
+        'fire', 'fire attack', 'attack', 'hit', 'strike', 'assault', 'explosion', 'blast',
+        'security breach', 'sabotage', 'incident', 'accident', 'security incident', 'terror attack',
+        'emergency', 'crisis', 'damage', 'destruction', 'threat', 'warning', 'alert',
         # Production & Operations Impact (Direct Impact)
         'production halt', 'shutdown', 'suspension', 'operational disruption', 'facility damage',
         'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
@@ -89,7 +92,7 @@ BOURUGE_RELEVANCE = {
         'inflation', 'deflation', 'recession', 'market volatility'
     ],
     
-    # Tier 4: The "Noise" Filter (Refined - Allow Real Logistics Content)
+    # Tier 4: The "Noise" Filter (Refined - Allow Real UAE Security Content)
     'blacklist': [
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'lifestyle', 'culture', 'tourism', 
         'hospitality', 'real estate', 'entertainment', 'stock market', 'fintech', 'celebrity', 'sports',

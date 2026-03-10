@@ -20,9 +20,9 @@ RSS_SOURCES = {
     'argus_media_energy': 'https://www.argusmedia.com/en/rss-feeds'
 }
 
-# Enhanced 2026 Precision Filtering Logic - Professional Logistics Intelligence
+# Enhanced 2026 Precision Filtering Logic - UAE Ports & Logistics Focus
 BOURUGE_RELEVANCE = {
-    # GATE 1: PRIMARY STAKEHOLDERS (ADNOC/Borouge + Industry Standards)
+    # GATE 1: PRIMARY STAKEHOLDERS (ADNOC/Borouge + UAE Logistics Providers)
     'entities': [
         # ADNOC/Borouge Specific (Your Core Business - Internal Use Only)
         'ADNOC', 'Borouge', 'Abu Dhabi National Oil Company', 'ADNOC Group', 'ADNOC Distribution',
@@ -32,37 +32,63 @@ BOURUGE_RELEVANCE = {
         'Borouge Distribution', 'Borouge Manufacturing', 'Borouge Petrochemical',
         'Borouge Plastics', 'Borouge Polymers', 'L&S', 'Nimex',
         
-        # Industry Standards (Professional Terms)
+        # UAE Ports & Terminals (Primary Logistics Service Providers)
+        'Khalifa Port', 'Jebel Ali Port', 'Ruwais Distribution Center', 'AD Ports', 'KIZAD',
+        'Abu Dhabi Ports', 'DP World', 'Abu Dhabi Terminals', 'Khalifa Industrial Zone',
+        'Khalifa Port Abu Dhabi', 'Jebel Ali Free Zone', 'Jebel Ali Terminal', 'Mina Jebel Ali',
+        'Mina Zayed', 'Mina Khalifa', 'Port of Jebel Ali', 'Port of Khalifa',
+        'Jebel Ali Port Authority', 'Abu Dhabi Port Company',
+        
+        # Major UAE Logistics Hubs
+        'Dubai Logistics City', 'Dubai Trade Center', 'Dubai Airport Free Zone',
+        'Sharjah Airport International Free Zone', 'Ajman Free Zone', 'Umm Al Quwain Free Zone',
+        'Ras Al Khaimah Free Zone', 'Fujairah Free Zone', 'Dubai Maritime City',
+        
+        # Global Container Lines (Partners)
+        'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
+        
+        # Global Logistics Providers
+        'DHL', 'FedEx', 'UPS', 'DB Schenker', 'Kuehne + Nagel', 'Expeditors',
+        
+        # Industry Standards
         'Petrochemical', 'Polymer', 'Polyethylene', 'Polypropylene', 
         'National Oil Company', 'Energy Major', 'Major Producer',
         'State-owned enterprise', 'Plastics Industry', 'Chemical Logistics',
         
-        # Major Container Lines (Global Logistics Partners)
-        'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
-        
         # Logistics & Shipping Terms
-        'shipping', 'container', 'vessel', 'port', 'logistics', 'freight', 'cargo', 'tanker', 'carrier', 'shipping line'
+        'shipping', 'container', 'vessel', 'port', 'logistics', 'freight', 'cargo', 'tanker', 'carrier', 'shipping line',
+        'terminal', 'port terminal', 'container terminal', 'distribution center', 'logistics hub'
     ],
     
-    # GATE 2: LOGISTICS CONTEXT (Professional + Strategic Locations)
+    # GATE 2: LOGISTICS CONTEXT (UAE + Strategic Locations)
     'ports_routes': [
-        # UAE/Gulf Critical Locations (Strategic)
-        'Khalifa Port', 'Jebel Ali', 'Abu Dhabi', 'Dubai', 'Ruways', 'Ruwais', 'Fujairah', 'Sohar',
+        # UAE Critical Ports & Terminals (Primary Focus)
+        'Khalifa Port', 'Jebel Ali Port', 'Ruwais', 'Ruwais Port', 'Ruwais Terminal', 'Ruwais Distribution Center',
+        'AD Ports', 'KIZAD', 'Khalifa Industrial Zone Abu Dhabi', 'KIZAD Abu Dhabi',
+        'Abu Dhabi Ports', 'DP World UAE', 'Abu Dhabi Terminals', 'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
+        'Jebel Ali Free Zone', 'Jebel Ali Terminal', 'Port of Jebel Ali', 'Port of Khalifa',
+        
+        # UAE Additional Ports
+        'Abu Dhabi', 'Dubai', 'Sharjah', 'Sohar', 'Fujairah', 'Ras Al Khaimah', 'Umm Al Quwain', 'Ajman',
+        'Fujairah Port', 'Sharjah Port', 'Ajman Port', 'Umm Al Quwain Port', 'Ras Al Khaimah Port',
+        
+        # UAE Industrial Areas
+        'Mussafah', 'Industrial City', 'Mussafah Industrial Area', 'ICAD', 'Abu Dhabi Industrial City',
         
         # Global Maritime Chokepoints (Strategic)
         'Suez Canal', 'Strait of Hormuz', 'Bab el-Mandeb', 'Strait of Malacca', 'Panama Canal',
         
-        # Major Global Ports (Global Supply Chain)
+        # Major Global Ports (International Supply Chain)
         'Singapore', 'Rotterdam', 'Shanghai', 'Ningbo', 'Hong Kong', 'Busan', 'Los Angeles', 'Long Beach',
-        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah',
+        'Hamburg', 'Antwerp', 'New York', 'New Jersey', 'Virginia', 'Savannah', 'Genoa', 'Felixstowe',
         
         # Professional Context Keywords
         'freight rates', 'container shipping', 'vessel diversion', 'blank sailing',
         'port congestion', 'Red Sea', 'supply chain disruption',
-        'charter rates', 'bunker adjustment'
+        'charter rates', 'bunker adjustment', 'terminal operations', 'port operations'
     ],
     
-    # GATE 3: 2026 OPERATIONAL IMPACT TRIGGERS (Enhanced with New Technical Risks)
+    # GATE 3: 2026 OPERATIONAL IMPACT TRIGGERS (Enhanced with UAE Port Focus)
     'impact_events': [
         # Disruptions & Delays (Professional Terms)
         'congestion', 'delay', 'delays', 'disruption', 'disruptions', 'blank sailing', 'force majeure',
@@ -80,6 +106,12 @@ BOURUGE_RELEVANCE = {
         'GNSS', 'GPS spoofing', 'UAV', 'projectile', 'war risk surcharge', 'WRS',
         'blank sailing', 'diversion', 'Strait of Hormuz closure',
         
+        # Port & Terminal Operations (UAE Focus)
+        'port congestion', 'terminal congestion', 'port closure', 'terminal closure',
+        'port delay', 'terminal delay', 'port disruption', 'terminal disruption',
+        'port operations', 'terminal operations', 'yard congestion', 'terminal yard',
+        'berth delay', 'berth congestion', 'container yard', 'container terminal',
+        
         # Comprehensive Impact Events
         'production halt', 'operational disruption', 'facility damage',
         'plant closure', 'refinery shutdown', 'processing disruption', 'manufacturing halt',
@@ -91,8 +123,7 @@ BOURUGE_RELEVANCE = {
         'worldwide impact', 'fire', 'fire attack', 'assault', 'explosion', 'blast',
         'security breach', 'sabotage', 'security incident', 'terror attack', 'emergency', 'crisis',
         'damage', 'destruction', 'threat', 'warning', 'alert', 'global security', 'international security',
-        'worldwide incident', 'port congestion', 'port closure', 'port suspension', 'port disruption',
-        'port delay', 'port backlog', 'port strike', 'severe disruption', 'yard congestion',
+        'worldwide incident', 'port backlog', 'port strike', 'severe disruption', 'yard congestion',
         'overcapacity', 'underutilization', 'reroute', 'reroutes', 'detour', 'detours',
         'capacity constraints', 'global shipping', 'international shipping', 'worldwide vessel',
         'polymer prices', 'plastic prices', 'petrochemical prices', 'feedstock prices',

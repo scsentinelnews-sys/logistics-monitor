@@ -22,24 +22,7 @@ class EmailNotifier:
         msg["To"] = self.recipient
 
         # Build Minimalist HTML Body - COMPLETELY CLEAN
-        html_content = "<html><body>"
-        html_content += "<h2 style='color: #1a365d;'>Latest Logistics Intelligence</h2>"
-        html_content += "<hr style='border: 0; border-top: 1px solid #eee;'>"
-        
-        for article in articles:
-            html_content += f"""
-            <div style='margin-bottom: 20px; padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; background: white;'>
-                <h3 style='margin: 0; color: #2d3748;'>{article['title']}</h3>
-                <p style='margin: 5px 0; color: #4a5568;'>{article['summary']}</p>
-                <a href='{article.get('link', '')}' style='color: #3182ce; text-decoration: none;'>📄 View Full Report →</a>
-                <p style='font-size: 12px; color: #a0aec0;'>Source: {article.get('source', '').replace('_', ' ').title()}</p>
-            </div>
-            """
-        
-        html_content += "<hr style='border: 0; border-top: 1px solid #eee;'>"
-        html_content += f"<p style='font-size: 12px; color: #cbd5e0;'>Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} GST</p>"
-        html_content += "</body></html>"
-
+        html_content = self.create_html_content(articles)
         msg.attach(MIMEText(html_content, "html"))
 
         try:

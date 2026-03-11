@@ -167,43 +167,40 @@ BOURUGE_RELEVANCE = {
         'international supply chain', 'worldwide logistics'
     ],
     
-    # GATE 4: ENHANCED BLACKLIST (Filter Non-Logistics Content)
+    # GATE 4: ENHANCED BLACKLIST (Fixed - Removed False Positives)
     'blacklist': [
         # Automotive Industry (Filter Out - Not Logistics)
-        'car', 'cars', 'automotive', 'automobile', 'vehicle', 'vehicles', 'suv', 'sedan', 'truck', 'trucks',
-        'luxury car', 'luxury cars', 'car sales', 'auto sales', 'vehicle sales', 'automotive sales',
+        'car loan', 'subprime', 'consumer credit', 'retail banking',
+        'automotive', 'automobile', 'luxury car', 'luxury cars', 'auto sales', 'vehicle sales',
         'vw', 'volkswagen', 'toyota', 'honda', 'ford', 'general motors', 'gm', 'bmw', 'mercedes', 'tesla',
-        'car loan', 'car loans', 'auto loan', 'auto loans', 'subprime', 'subprime firm', 'goeasy',
         'car insurance', 'auto insurance', 'vehicle insurance', 'dealership', 'dealerships',
         
         # Energy Industry (Filter Out - Unless Logistics Impact)
-        'shell', 'bp', 'exxon', 'chevron', 'total', 'equinor', 'saudi aramco', 'aramco',
+        'shell', 'bp', 'exxon', 'chevron', 'total', 'equinor',
         'clean energy', 'renewable energy', 'solar', 'wind', 'battery', 'batteries',
         'oil price', 'oil prices', 'energy price', 'energy prices', 'gas price', 'gas prices',
         'energy crisis', 'energy market', 'energy trading', 'energy investment',
         'brazil', 'brazilian', 'argentina', 'mexico', 'chile', 'colombia', 'peru',
         
         # Financial Services (Filter Out - Not Logistics)
-        'subprime', 'subprime firm', 'goeasy', 'car loans', 'auto loans', 'higher losses',
+        'subprime firm', 'goeasy', 'higher losses',
         'loan', 'loans', 'lending', 'credit', 'credit risk', 'financial services',
         'banking', 'banks', 'investment', 'investments', 'stock market', 'equity', 'shares',
         
         # Professional "Noise" Filter
-        'luxury car', 'passenger vehicle', 'automotive sales', 'VW', 'Toyota', 
         'real estate', 'hospitality', 'tourism', 'sports', 'celebrity', 
         'lifestyle', 'fintech', 'bitcoin', 'crypto', 'fashion', 'retail sales',
         
-        # Comprehensive Blacklist (Removed logistics terms)
+        # Comprehensive Blacklist (Removed logistics terms and false positives)
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'culture', 
         'entertainment', 'driving', 'economy', 'economic',
         'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming',
         'social media', 'investment banking', 'personal finance',
-        'retail sales', 'consumer spending', 'auto sales', 'housing market', 'job market',
         'corporate earnings', 'business news', 'company news', 'executive news',
-        'saudi', 'saudi arabian', 'hmt', 'reform hmt', 'british shipping', 'uk shipping policy',
+        'hmt', 'reform hmt', 'british shipping', 'uk shipping policy',
         'spirit airlines', 'southwest', 'delta', 'united', 'american airlines',
         'jetblue', 'alaska airlines', 'frontier', 'allegiant', 'amazon', 'apple', 'google',
-        'microsoft', 'meta', 'tesla', 'witkoff', 'trump', 'russia', 'iran', 'ukraine',
+        'microsoft', 'meta', 'witkoff', 'trump', 'russia', 'iran', 'ukraine',
         'white house', 'pentagon', 'congress', 'senate', 'house of representatives',
         'prime minister', 'president', 'foreign minister', 'defense minister',
         'la terminals', 'bridge closure', 'local disruption', 'regional issue',
@@ -211,7 +208,7 @@ BOURUGE_RELEVANCE = {
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'significant investment', 'lab',
-        'research lab', 'innovation', 'digital', 'automation', 'robotics',
+        'research lab', 'innovation', 'automation', 'robotics',
         'share price', 'stock price', 'market analysis', 'trading',
         'earnings report', 'quarterly earnings', 'profit warning', 'revenue',
         'economic data', 'inflation data', 'gdp growth', 'interest rates',
@@ -240,4 +237,35 @@ MONITORING_CONFIG = {
     'summary_min_length': 50,
     'summary_max_length': 250,
     'max_daily_items': 5
+}
+
+# config.py updates
+# REMOVE 'car' from blacklist -> REPLACE with 'car loan', 'dealership', 'passenger vehicle'
+# REMOVE 'saudi', 'oman', 'kuwait' from any blacklists.
+
+# Updated GCC_RELEVANCE for 100% Coverage
+GCC_RELEVANCE = {
+    'countries': [
+        'oman', 'saudi', 'ksa', 'kuwait', 'qatar', 'bahrain', 'uae', 'emirates'
+    ],
+    'ports': [
+        # UAE
+        'khalifa', 'jebel ali', 'fujairah', 'ras al khaimah', 'ruwais', 
+        'khor fakkan', 'mina zayed', 'hamriya', 'mina khalid', 'ajman',
+        # SAUDI ARABIA
+        'jeddah', 'dammam', 'neom', 'yanbu', 'jubail', 'king abdullah port', 
+        'ras al khair', 'ras tanura', 'jazan', 'dhiba',
+        # OMAN
+        'salalah', 'sohar', 'duqm', 'muscat', 'khasab', 'mina al fahal',
+        # QATAR
+        'hamad', 'ras laffan', 'mesaieed', 'doha port',
+        # KUWAIT
+        'shuaiba', 'shuwaikh', 'doha',
+        # BAHRAIN
+        'khalifa bin salman', 'mina salman'
+    ],
+    'security_terms': [
+        'drone', 'attack', 'explosion', 'seized', 'blocked', 'intercepted', 
+        'uav', 'missile', 'gps spoofing', 'gnss', 'vessel held', 'strait of hormuz'
+    ]
 }

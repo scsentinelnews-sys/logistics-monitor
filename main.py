@@ -3,80 +3,59 @@ import os
 from datetime import datetime
 from typing import List, Dict
 from rss_parser import RSSFeedParser
-from email_notifier import EmailNotifier
-from config import MONITORING_CONFIG, EMAIL_CONFIG
+from email_system import send_logistics_alert  # Use new clean system
+from config import MONITORING_CONFIG
 
 class LogisticsMonitor:
-    def __init__(self, email_user: str, email_password: str):
+    def __init__(self):
         self.parser = RSSFeedParser()
-        self.notifier = EmailNotifier()
-        self.email_user = email_user
-        self.email_password = email_password
         self.last_check_time = None
     
     def check_and_alert(self) -> None:
-        """Check for news and send alerts"""
+        """Check for news and send alerts if needed"""
         try:
-            print(f"🕐 Starting news check at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"[{datetime.now()}] Starting logistics monitoring check...")
             
-            # Fetch and filter news
+            # Fetch and filter articles
             articles = self.parser.fetch_and_filter_news()
             
             if articles:
-                print(f"📧 Found {len(articles)} relevant articles, sending alert...")
+                print(f"Found {len(articles)} actionable intelligence items")
                 
-                # Send email alert
-                success = self.notifier.send_alert(articles)
+                # Send email alert using clean system
+                success = send_logistics_alert(articles)
                 
                 if success:
-                    print("✅ Email alert sent successfully")
+                    print(f"Alert sent successfully with {len(articles)} items")
                 else:
-                    print("❌ Failed to send email alert")
+                    print("Failed to send alert")
             else:
-                print("ℹ️  No relevant articles found")
-                
+                print("No actionable intelligence found")
+        
         except Exception as e:
             print(f"❌ Error in check_and_alert: {e}")
     
-    def run_continuous(self) -> None:
-        """Run continuous monitoring"""
-        print("🚀 Starting continuous monitoring...")
-        
-        while True:
-            try:
-                self.check_and_alert()
-                
-                # Wait for next check
-                wait_time = MONITORING_CONFIG['check_interval_minutes'] * 60
-                print(f"⏰ Next check in {MONITORING_CONFIG['check_interval_minutes']} minutes...")
-                time.sleep(wait_time)
-                
-            except KeyboardInterrupt:
-                print("🛑 Monitoring stopped by user")
-                break
-            except Exception as e:
-                print(f"❌ Error in continuous monitoring: {e}")
-                time.sleep(60)  # Wait 1 minute before retrying
+    def run_once(self) -> None:
+        """Run monitoring check once"""
+        self.check_and_alert()
 
 def main():
-    """Main function"""
+    """Main entry point"""
     print("🌍 Global Logistics Intelligence System")
     print("=" * 50)
     
-    # Get email credentials
-    email_user = os.getenv('LOGISTICS_EMAIL_USER')
-    email_password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
+    # Initialize monitor
+    monitor = LogisticsMonitor()
     
-    if not email_user or not email_password:
-        print("❌ Email credentials not found in environment variables")
-        print("Please set LOGISTICS_EMAIL_USER and LOGISTICS_EMAIL_PASSWORD")
+    # For GitHub Actions - run production mode directly
+    if os.getenv('GITHUB_ACTIONS'):
+        print("🤖 Running in GitHub Actions mode - production check")
+        monitor.check_and_alert()
         return
     
-    # Create and run monitor
-    monitor = LogisticsMonitor(email_user, email_password)
-    
     # Run single check
-    monitor.check_and_alert()
+    print("Running single check...")
+    monitor.run_once()
 
 if __name__ == "__main__":
     main()

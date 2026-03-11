@@ -14,7 +14,7 @@ class EmailNotifier:
 
     def send_alert(self, articles):
         if not articles:
-            return
+            return False
 
         msg = MIMEMultipart("alternative")
         msg["Subject"] = f"🚢 Global Logistics Alert - {datetime.now().strftime('%Y-%m-%d')}"
@@ -48,8 +48,10 @@ class EmailNotifier:
                 server.login(self.sender, self.password)
                 server.sendmail(self.sender, self.recipient, msg.as_string())
             print("✅ Clean email sent successfully.")
+            return True
         except Exception as e:
             print(f"❌ Failed to send email: {e}")
+            return False
 
     def send_test_email(self) -> bool:
         """Send test email"""

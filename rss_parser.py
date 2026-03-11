@@ -21,10 +21,16 @@ class RSSFeedParser:
         """Fetch and filter news with emergency fixes for security incidents"""
         all_articles = []
         
+        # Get current time and calculate 30-minute window
+        current_time = datetime.now()
+        time_window_start = current_time - timedelta(hours=0.5)
+        
+        print(f"🕐 Fetching news from {time_window_start.strftime('%H:%M')} to {current_time.strftime('%H:%M')} (30 mins)")
+        
         for source_name, feed_url in RSS_SOURCES.items():
             try:
                 print(f"Fetching from {source_name}...")
-                articles = self.fetch_feed(feed_url, source_name)
+                articles = self.fetch_feed(feed_url, source_name, time_window_start)
                 filtered_articles = self.filter_articles(articles, source_name)
                 all_articles.extend(filtered_articles)
                 print(f"✅ {source_name}: {len(filtered_articles)} relevant articles")
@@ -41,8 +47,8 @@ class RSSFeedParser:
         
         return quality_articles
     
-    def fetch_feed(self, feed_url: str, source_name: str) -> List[Dict]:
-        """Fetch articles from a single RSS feed"""
+    def fetch_feed(self, feed_url: str, source_name: str, time_window_start: datetime) -> List[Dict]:
+        """Fetch articles from a single RSS feed with time filtering"""
         try:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -54,16 +60,33 @@ class RSSFeedParser:
             articles = []
             
             for entry in feed.entries:
-                article = {
-                    'title': self.clean_text(entry.get('title', '')),
-                    'summary': self.clean_text(entry.get('summary', entry.get('description', ''))),
-                    'link': entry.get('link', ''),
-                    'published': entry.get('published', ''),
-                    'source': source_name,
-                    'category': 'Logistics Intelligence'
-                }
-                articles.append(article)
+                # Parse publication date
+                pub_date = None
+                if hasattr(entry, 'published'):
+                    try:
+                        pub_date = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %Z')
+                    except:
+                        try:
+                            pub_date = datetime.strptime(entry.published, '%Y-%m-%d %H:%M:%S')
+                        except:
+                            pub_date = datetime.now()
+                else:
+                    pub_date = datetime.now()
+                
+                # Only include articles within 30-minute window
+                if pub_date >= time_window_start:
+                    article = {
+                        'title': self.clean_text(entry.get('title', '')),
+                        'summary': self.clean_text(entry.get('summary', entry.get('description', ''))),
+                        'link': entry.get('link', ''),
+                        'published': entry.get('published', pub_date.strftime('%Y-%m-%d %H:%M:%S')),
+                        'source': source_name,
+                        'category': 'Logistics Intelligence',
+                        'pub_date': pub_date
+                    }
+                    articles.append(article)
             
+            print(f"📅 {source_name}: Found {len(articles)} articles in 30-minute window")
             return articles
             
         except Exception as e:

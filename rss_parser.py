@@ -161,11 +161,11 @@ class RSSFeedParser:
         core_sectors = [
             'maritime', 'shipping', 'port', 'terminal', 'freight',
             'petrochemical', 'polymer', 'crude', 'lng', 'tanker',
-            'supply chain', 'warehouse', 'vessel', 'container'
+            'supply chain', 'warehouse', 'vessel', 'container','tank'
         ]
         
         # 3. STRATEGIC WHITELIST (UAE / ADNOC / Borouge context)
-        strategic_entities = ['adnoc', 'borouge', 'uae', 'abu dhabi', 'dubai', 'khalifa', 'jebel ali']
+        strategic_entities = ['adnoc', 'borouge', 'uae', 'abu dhabi', 'dubai', 'khalifa', 'jebel ali','oman','omani']
         
         # Must be EITHER a core logistics topic OR a strategic UAE entity
         has_sector = any(sector in content for sector in core_sectors)
@@ -343,7 +343,7 @@ class RSSFeedParser:
         has_coordinates = bool(re.search(r'\d+°[NSEW]', content)) or bool(re.search(r'\d+\.\d+[NSEW]', content))
         
         # Check for UAE port/terminal focus (relaxed requirements)
-        uae_port_entities = ['Khalifa Port', 'Jebel Ali Port', 'Ruwais', 'AD Ports', 'KIZAD', 'DP World']
+        uae_port_entities = ['Khalifa Port', 'Jebel Ali Port', 'Ruwais', 'AD Ports', 'KIZAD', 'DP World','Salalah']
         has_uae_port_focus = any(port.lower() in content.lower() for port in uae_port_entities)
         
         # Check for development/expansion keywords

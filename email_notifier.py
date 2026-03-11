@@ -15,7 +15,7 @@ class EmailNotifier:
         self.recipient_email = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
 
     def send_logistics_alert(self, articles: List[Dict]) -> bool:
-        """Send logistics alert email with clean subject and body"""
+        """Send logistics alert email with completely clean subject and body"""
         try:
             # Create message
             msg = MIMEMultipart('alternative')
@@ -23,11 +23,11 @@ class EmailNotifier:
             msg['From'] = self.sender_email
             msg['To'] = self.recipient_email
             
-            # Create HTML content - COMPLETELY CLEAN
+            # Create COMPLETELY CLEAN HTML content
             html_content = self.create_clean_html_content(articles)
             html_part = MIMEHTML(html_content, 'html')
             
-            # Create text content - COMPLETELY CLEAN
+            # Create COMPLETELY CLEAN text content
             text_content = self.create_clean_text_content(articles)
             text_part = MIMEText(text_content, 'plain')
             
@@ -49,7 +49,7 @@ class EmailNotifier:
             return False
 
     def create_clean_html_content(self, articles: List[Dict]) -> str:
-        """Create clean HTML email content - NO strategic language"""
+        """Create clean HTML email content - NO strategic language in body"""
         # Header
         html = """
         <!DOCTYPE html>

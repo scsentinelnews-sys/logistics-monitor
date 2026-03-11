@@ -12,8 +12,6 @@ RSS_SOURCES = {
     'gcaptain_maritime': 'https://gcaptain.com/feed/',
     'splash_247': 'https://splash247.com/feed/',
     'hellenic_shipping': 'https://www.hellenicshippingnews.com/feed/',
-'augusmedia':
-'https://www.argusmedia.com/en/news-and-insights/latest-market-news/'
     
     # Supply Chain & Energy Markets
     'icis_chemical_logistics': 'https://www.icis.com/explore/resources/news/',

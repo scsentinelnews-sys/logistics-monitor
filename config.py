@@ -22,7 +22,7 @@ RSS_SOURCES = {
     'argus_media_energy': 'https://www.argusmedia.com/en/rss-feeds'
 }
 
-# Enhanced 2026 Precision Filtering Logic - UAE Ports & Logistics Focus
+# Enhanced 2026 Precision Filtering Logic - Comprehensive GCC Coverage
 BOURUGE_RELEVANCE = {
     # GATE 1: PRIMARY STAKEHOLDERS (ADNOC/Borouge + UAE Logistics Providers)
     'entities': [
@@ -46,6 +46,19 @@ BOURUGE_RELEVANCE = {
         'Sharjah Airport International Free Zone', 'Ajman Free Zone', 'Umm Al Quwain Free Zone',
         'Ras Al Khaimah Free Zone', 'Fujairah Free Zone', 'Dubai Maritime City',
         
+        # GCC Ports & Terminals (NEW: Comprehensive Coverage)
+        'Salalah Port', 'Port of Salalah', 'Oman Port', 'Mina Sultan Qaboos', 'Sohar Port',
+        'Port of Sohar', 'Duqm Port', 'Oman Logistics', 'Oman Shipping',
+        'Jeddah Port', 'King Abdullah Port', 'Dammam Port', 'Ras Al Khair Port',
+        'Yanbu Port', 'Port of Jeddah', 'Saudi Ports Authority', 'Mawani',
+        'Kuwait Port', 'Shuwaikh Port', 'Shuaiba Port', 'Kuwait Shipping',
+        'Bahrain Port', 'Khalifa Bin Salman Port', 'Bahrain Logistics',
+        'Qatar Port', 'Hamad Port', 'Doha Port', 'Qatar Shipping',
+        
+        # GCC Shipping Lines & Logistics (NEW: Regional Coverage)
+        'Oman Shipping', 'National Shipping Company of Oman', 'Kuwait Oil Tanker',
+        'Bahrain Shipping', 'Qatar Shipping', 'Saudi Shipping', 'GCC Shipping',
+        
         # Global Container Lines (Partners)
         'MAERSK', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen', 'COSCO', 'HMM', 'Yang Ming', 'Zim', 'PIL',
         
@@ -62,7 +75,7 @@ BOURUGE_RELEVANCE = {
         'terminal', 'port terminal', 'container terminal', 'distribution center', 'logistics hub'
     ],
     
-    # GATE 2: LOGISTICS CONTEXT (UAE + Strategic Locations)
+    # GATE 2: LOGISTICS CONTEXT (GCC + Strategic Locations)
     'ports_routes': [
         # UAE Critical Ports & Terminals (Primary Focus)
         'Khalifa Port', 'Jebel Ali Port', 'Ruwais', 'Ruwais Port', 'Ruwais Terminal', 'Ruwais Distribution Center',
@@ -70,12 +83,21 @@ BOURUGE_RELEVANCE = {
         'Abu Dhabi Ports', 'DP World UAE', 'Abu Dhabi Terminals', 'Mina Jebel Ali', 'Mina Zayed', 'Mina Khalifa',
         'Jebel Ali Free Zone', 'Jebel Ali Terminal', 'Port of Jebel Ali', 'Port of Khalifa',
         
+        # GCC Critical Ports & Terminals (NEW: Comprehensive Coverage)
+        'Salalah', 'Port of Salalah', 'Oman', 'Mina Sultan Qaboos', 'Sohar', 'Port of Sohar', 'Duqm', 'Duqm Port',
+        'Jeddah', 'Port of Jeddah', 'King Abdullah Port', 'Dammam', 'Port of Dammam', 'Ras Al Khair', 'Yanbu', 'Port of Yanbu',
+        'Kuwait', 'Shuwaikh Port', 'Shuaiba Port', 'Bahrain', 'Khalifa Bin Salman Port', 'Qatar', 'Hamad Port', 'Doha Port',
+        
         # UAE Additional Ports
         'Abu Dhabi', 'Dubai', 'Sharjah', 'Sohar', 'Fujairah', 'Ras Al Khaimah', 'Umm Al Quwain', 'Ajman',
         'Fujairah Port', 'Sharjah Port', 'Ajman Port', 'Umm Al Quwain Port', 'Ras Al Khaimah Port',
         
         # UAE Industrial Areas
         'Mussafah', 'Industrial City', 'Mussafah Industrial Area', 'ICAD', 'Abu Dhabi Industrial City',
+        
+        # GCC Industrial Areas (NEW: Regional Coverage)
+        'Ras Al Khaimah', 'Ras Al Khaimah Port', 'Oman Industrial Area', 'Salalah Industrial Zone',
+        'Jeddah Industrial Area', 'Dammam Industrial Area', 'Kuwait Industrial Area',
         
         # Global Maritime Chokepoints (Strategic)
         'Suez Canal', 'Strait of Hormuz', 'Bab el-Mandeb', 'Strait of Malacca', 'Panama Canal',
@@ -90,7 +112,7 @@ BOURUGE_RELEVANCE = {
         'charter rates', 'bunker adjustment', 'terminal operations', 'port operations'
     ],
     
-    # GATE 3: 2026 OPERATIONAL IMPACT TRIGGERS (Enhanced with UAE Port Focus)
+    # GATE 3: 2026 OPERATIONAL IMPACT TRIGGERS (Enhanced with GCC Focus)
     'impact_events': [
         # Disruptions & Delays (Professional Terms)
         'congestion', 'delay', 'delays', 'disruption', 'disruptions', 'blank sailing', 'force majeure',
@@ -108,15 +130,20 @@ BOURUGE_RELEVANCE = {
         'GNSS', 'GPS spoofing', 'UAV', 'projectile', 'war risk surcharge', 'WRS',
         'blank sailing', 'diversion', 'Strait of Hormuz closure',
         
-        # Port & Terminal Operations (UAE Focus)
+        # Port & Terminal Operations (GCC Focus)
         'port congestion', 'terminal congestion', 'port closure', 'terminal closure',
         'port delay', 'terminal delay', 'port disruption', 'terminal disruption',
         'port operations', 'terminal operations', 'yard congestion', 'terminal yard',
         'berth delay', 'berth congestion', 'container yard', 'container terminal',
         
-        # Development & Expansion (UAE Port Focus)
+        # Development & Expansion (GCC Focus)
         'expansion', 'development', 'capacity increase', 'new terminal', 'terminal development',
         'infrastructure', 'digital transformation', 'modernization', 'upgrade', 'improvement',
+        
+        # GCC Maritime Security (NEW: Regional Security Focus)
+        'drone attack', 'missile attack', 'security incident', 'maritime security',
+        'blocked', 'vessel blocked', 'strait blocked', 'hormuz blocked', 'red sea blocked',
+        'gulf security', 'gcc security', 'middle east security', 'regional security',
         
         # Comprehensive Impact Events
         'production halt', 'operational disruption', 'facility damage',
@@ -140,7 +167,7 @@ BOURUGE_RELEVANCE = {
         'international supply chain', 'worldwide logistics'
     ],
     
-    # GATE 4: ENHANCED BLACKLIST (Fixed - Removed Logistics Terms)
+    # GATE 4: ENHANCED BLACKLIST (Filter Non-Logistics Content)
     'blacklist': [
         # Automotive Industry (Filter Out - Not Logistics)
         'car', 'cars', 'automotive', 'automobile', 'vehicle', 'vehicles', 'suv', 'sedan', 'truck', 'trucks',
@@ -154,6 +181,12 @@ BOURUGE_RELEVANCE = {
         'clean energy', 'renewable energy', 'solar', 'wind', 'battery', 'batteries',
         'oil price', 'oil prices', 'energy price', 'energy prices', 'gas price', 'gas prices',
         'energy crisis', 'energy market', 'energy trading', 'energy investment',
+        'brazil', 'brazilian', 'argentina', 'mexico', 'chile', 'colombia', 'peru',
+        
+        # Financial Services (Filter Out - Not Logistics)
+        'subprime', 'subprime firm', 'goeasy', 'car loans', 'auto loans', 'higher losses',
+        'loan', 'loans', 'lending', 'credit', 'credit risk', 'financial services',
+        'banking', 'banks', 'investment', 'investments', 'stock market', 'equity', 'shares',
         
         # Professional "Noise" Filter
         'luxury car', 'passenger vehicle', 'automotive sales', 'VW', 'Toyota', 
@@ -162,7 +195,7 @@ BOURUGE_RELEVANCE = {
         
         # Comprehensive Blacklist (Removed logistics terms)
         'hero', 'heroes', 'economic hero', 'award', 'awards', 'biography', 'culture', 
-        'entertainment', 'stock market', 'driving', 'economy', 'economic',
+        'entertainment', 'driving', 'economy', 'economic',
         'politics', 'election', 'elections', 'cryptocurrency', 'bitcoin', 'nft', 'gaming',
         'social media', 'investment banking', 'personal finance',
         'retail sales', 'consumer spending', 'auto sales', 'housing market', 'job market',
@@ -178,13 +211,12 @@ BOURUGE_RELEVANCE = {
         'nvidia', 'artificial intelligence', 'machine learning', 'thinking machines',
         'mira murati', 'openai', 'chatgpt', 'technology', 'tech', 'software', 'startup',
         'venture capital', 'funding', 'significant investment', 'lab',
-        'research lab', 'innovation', 'automation', 'robotics',
+        'research lab', 'innovation', 'digital', 'automation', 'robotics',
         'share price', 'stock price', 'market analysis', 'trading',
         'earnings report', 'quarterly earnings', 'profit warning', 'revenue',
         'economic data', 'inflation data', 'gdp growth', 'interest rates',
         
         # Additional Non-Logistics Terms
-        'brazil', 'brazilian', 'argentina', 'mexico', 'chile', 'colombia', 'peru',
         'consumer', 'consumers', 'retail', 'retailing', 'shopping', 'mall', 'malls',
         'fashion', 'clothing', 'apparel', 'shoes', 'footwear', 'jewelry', 'watches',
         'restaurant', 'restaurants', 'food', 'beverage', 'travel', 'tourism', 'hotel', 'hotels'

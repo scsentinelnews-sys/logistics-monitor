@@ -22,7 +22,7 @@ GCC_RELEVANCE = {
 }
 
 EMAIL_CONFIG = {
-    'subject_prefix: 🚢 Global Logistics Alert',
+    'subject_prefix': '🚢 Global Logistics Alert',
     'max_items': 5
 }
 

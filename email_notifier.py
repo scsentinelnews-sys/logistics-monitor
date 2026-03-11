@@ -21,7 +21,7 @@ class EmailNotifier:
         msg["From"] = self.sender
         msg["To"] = self.recipient
 
-        # Build Minimalist HTML Body - CLEAN SWEEP
+        # Build Minimalist HTML Body - COMPLETELY CLEAN
         html_content = "<html><body>"
         html_content += "<h2 style='color: #1a365d;'>Latest Logistics Intelligence</h2>"
         html_content += "<hr style='border: 0; border-top: 1px solid #eee;'>"
@@ -66,12 +66,12 @@ class EmailNotifier:
         return self.send_alert(test_articles)
 
 # Standalone function for compatibility
-def send_logistics_alert(articles: List[Dict]) -> bool:
+def send_logistics_alert(articles):
     """Standalone function for sending logistics alerts"""
     notifier = EmailNotifier()
     return notifier.send_alert(articles)
 
-def send_test_email() -> bool:
+def send_test_email():
     """Standalone function for sending test email"""
     notifier = EmailNotifier()
     return notifier.send_test_email()

@@ -1,174 +1,55 @@
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.html import MIMEHTML
-from typing import List, Dict
-import os
 from datetime import datetime
 
 class EmailNotifier:
     def __init__(self):
-        self.smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-        self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
-        self.sender_email = os.getenv('LOGISTICS_EMAIL_USER')
-        self.sender_password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
-        self.recipient_email = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
+        self.recipient = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
+        self.sender = os.getenv('LOGISTICS_EMAIL_USER')
+        self.password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
+        self.smtp_server = "smtp.gmail.com"
+        self.smtp_port = 587
 
-    def send_logistics_alert(self, articles: List[Dict]) -> bool:
-        """Send logistics alert email with completely clean subject and body"""
-        try:
-            # Create message
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = '🚢 Global Logistics Alert'
-            msg['From'] = self.sender_email
-            msg['To'] = self.recipient_email
-            
-            # Create COMPLETELY CLEAN HTML content
-            html_content = self.create_clean_html_content(articles)
-            html_part = MIMEHTML(html_content, 'html')
-            
-            # Create COMPLETELY CLEAN text content
-            text_content = self.create_clean_text_content(articles)
-            text_part = MIMEText(text_content, 'plain')
-            
-            # Attach parts
-            msg.attach(text_part)
-            msg.attach(html_part)
-            
-            # Send email
-            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-            server.starttls()
-            server.login(self.sender_email, self.sender_password)
-            server.send_message(msg)
-            server.quit()
-            
-            return True
-            
-        except Exception as e:
-            print(f"Error sending email: {e}")
-            return False
+    def send_alert(self, articles):
+        if not articles:
+            return
 
-    def create_clean_html_content(self, articles: List[Dict]) -> str:
-        """Create clean HTML email content - NO strategic language in body"""
-        # Header
-        html = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Global Logistics Alert</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    max-width: 800px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                .header {
-                    background-color: #f8f9fa;
-                    padding: 20px;
-                    border-radius: 8px;
-                    margin-bottom: 20px;
-                    border-left: 4px solid #007bff;
-                }
-                .article {
-                    background-color: #fff;
-                    border: 1px solid #e9ecef;
-                    border-radius: 8px;
-                    padding: 15px;
-                    margin-bottom: 15px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-                .article h3 {
-                    color: #007bff;
-                    margin: 0 0 10px 0;
-                    font-size: 16px;
-                }
-                .article p {
-                    margin: 0 0 10px 0;
-                    color: #666;
-                    font-size: 14px;
-                }
-                .article .meta {
-                    color: #999;
-                    font-size: 12px;
-                    margin-top: 10px;
-                }
-                .footer {
-                    text-align: center;
-                    color: #999;
-                    font-size: 12px;
-                    margin-top: 30px;
-                    padding: 20px;
-                    border-top: 1px solid #e9ecef;
-                }
-                .incident {
-                    border-left: 4px solid #dc3545;
-                }
-                .incident h3 {
-                    color: #dc3545;
-                }
-            </style>
-        </head>
-        <body>
-        """
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"🚢 Global Logistics Alert - {datetime.now().strftime('%Y-%m-%d')}"
+        msg["From"] = self.sender
+        msg["To"] = self.recipient
+
+        # Build Minimalist HTML Body - CLEAN SWEEP
+        html_content = "<html><body>"
+        html_content += "<h2 style='color: #1a365d;'>Latest Logistics Intelligence</h2>"
+        html_content += "<hr style='border: 0; border-top: 1px solid #eee;'>"
         
-        # Header
-        html += """
-        <div class="header">
-            <h1>🚢 Global Logistics Alert</h1>
-            <p><strong>Generated:</strong> """ + datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC') + """</p>
-            <p><strong>Articles:</strong> """ + str(len(articles)) + """</p>
-        </div>
-        """
-        
-        # Articles - COMPLETELY CLEAN
         for article in articles:
-            article_class = 'article'
-            if any(keyword in article.get('title', '').lower() or keyword in article.get('summary', '').lower() 
-                   for keyword in ['attack', 'explosion', 'fire', 'security breach', 'emergency']):
-                article_class += ' incident'
-            
-            html += f"""
-            <div class="{article_class}">
-                <h3>{article.get('title', '')}</h3>
-                <p>{article.get('summary', '')}</p>
-                <div class="meta">Source: {article.get('source', '')} | {article.get('published', '')}</div>
+            html_content += f"""
+            <div style='margin-bottom: 20px; padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; background: white;'>
+                <h3 style='margin: 0; color: #2d3748;'>{article['title']}</h3>
+                <p style='margin: 5px 0; color: #4a5568;'>{article['summary']}</p>
+                <a href='{article.get('link', '')}' style='color: #3182ce; text-decoration: none;'>📄 View Full Report →</a>
+                <p style='font-size: 12px; color: #a0aec0;'>Source: {article.get('source', '').replace('_', ' ').title()}</p>
             </div>
             """
         
-        # Footer - COMPLETELY CLEAN
-        html += """
-        <div class="footer">
-            <p>📧 Generated by AI Logistics Monitor</p>
-            <p>⏰ Next update: Within 30 minutes</p>
-        </div>
-        </body>
-        </html>
-        """
-        
-        return html
+        html_content += "<hr style='border: 0; border-top: 1px solid #eee;'>"
+        html_content += f"<p style='font-size: 12px; color: #cbd5e0;'>Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} GST</p>"
+        html_content += "</body></html>"
 
-    def create_clean_text_content(self, articles: List[Dict]) -> str:
-        """Create clean text email content - NO strategic language"""
-        text = "🚢 Global Logistics Alert\n"
-        text += "=" * 50 + "\n\n"
-        text += f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}\n"
-        text += f"Articles: {len(articles)}\n\n"
-        
-        for i, article in enumerate(articles, 1):
-            text += f"{i}. {article.get('title', '')}\n"
-            text += f"   {article.get('summary', '')}\n"
-            text += f"   Source: {article.get('source', '')} | {article.get('published', '')}\n\n"
-        
-        text += "=" * 50 + "\n"
-        text += "📧 Generated by AI Logistics Monitor\n"
-        text += "⏰ Next update: Within 30 minutes\n"
-        
-        return text
+        msg.attach(MIMEText(html_content, "html"))
+
+        try:
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.sender, self.password)
+                server.sendmail(self.sender, self.recipient, msg.as_string())
+            print("✅ Clean email sent successfully.")
+        except Exception as e:
+            print(f"❌ Failed to send email: {e}")
 
     def send_test_email(self) -> bool:
         """Send test email"""
@@ -177,17 +58,18 @@ class EmailNotifier:
                 'title': 'Test Article - Port Congestion Alert',
                 'summary': 'This is a test article to verify email delivery.',
                 'source': 'Test Source',
-                'published': datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+                'published': datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC'),
+                'link': 'https://example.com/article/1'
             }
         ]
         
-        return self.send_logistics_alert(test_articles)
+        return self.send_alert(test_articles)
 
 # Standalone function for compatibility
 def send_logistics_alert(articles: List[Dict]) -> bool:
     """Standalone function for sending logistics alerts"""
     notifier = EmailNotifier()
-    return notifier.send_logistics_alert(articles)
+    return notifier.send_alert(articles)
 
 def send_test_email() -> bool:
     """Standalone function for sending test email"""

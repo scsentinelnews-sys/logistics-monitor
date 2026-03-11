@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from typing import List, Dict
 from rss_parser import RSSFeedParser
-from email_system import send_logistics_alert  # Use new clean system
+from email_system import send_logistics_alert  # Use clean table-only system
 from config import MONITORING_CONFIG
 
 class LogisticsMonitor:
@@ -22,7 +22,7 @@ class LogisticsMonitor:
             if articles:
                 print(f"Found {len(articles)} actionable intelligence items")
                 
-                # Send email alert using clean system
+                # Send email alert using clean table-only system
                 success = send_logistics_alert(articles)
                 
                 if success:

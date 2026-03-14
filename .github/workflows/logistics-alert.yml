@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-LOGISTICS-MONITOR
+          key: sent-articles-${{ github.event.workflow_run_id }}
           restore-keys: |
             sent-articles-
       
@@ -52,9 +52,19 @@ jobs:
           if [ -f sent_articles.json ]; then
             echo "📋 sent_articles.json content:"
             cat sent_articles.json
+            echo "📋 Article count: $(python -c "
+import json
+try:
+    with open('sent_articles.json', 'r') as f:
+        data = json.load(f)
+        print(f'✅ Article count: {len(data)}')
+except:
+    print('❌ Error reading JSON')
+            "
           fi
-          echo "🔍 Cache key: sent-articles-LOGISTICS-MONITOR"
+          echo "🔍 Cache key: sent-articles-${{ github.event.workflow_run_id }}"
           echo "🔍 GitHub run number: ${{ github.run_number }}"
+          echo "🔍 Workflow run ID: ${{ github.event.workflow_run_id }}"
           echo "🔍 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: $FORCE_JAVASCRIPT_ACTIONS_TO_NODE24"
           echo "🔍 ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: $ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
           python main.py
@@ -63,4 +73,4 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-LOGISTICS-MONITOR
+          key: sent-articles-${{ github.event.workflow_run_id }

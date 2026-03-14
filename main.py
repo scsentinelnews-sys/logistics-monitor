@@ -9,9 +9,7 @@ def load_sent_articles():
     try:
         if os.path.exists('sent_articles.json'):
             with open('sent_articles.json', 'r') as f:
-                data = json.load(f)
-                print(f"✅ Loaded {len(data)} sent articles")
-                return data
+                return json.load(f)
     except Exception as e:
         print(f"❌ Error loading sent_articles.json: {e}")
         return {}
@@ -31,7 +29,7 @@ def main():
     print(f"🕐 Scan time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
     print("=" * 60)
     
-    # Load sent articles for duplicate prevention
+    # Load sent articles
     sent_articles = load_sent_articles()
     print(f"🔍 Loaded {len(sent_articles)} previously sent articles")
     
@@ -42,7 +40,7 @@ def main():
     articles = parser.fetch_and_filter_news()
     print(f"📊 Found {len(articles)} relevant logistics articles")
     
-    # Filter out duplicates using a longer time window
+    # Filter out duplicates
     new_articles = []
     for article in articles:
         article_id = article.get('title', '') + article.get('link', '')
@@ -56,7 +54,7 @@ def main():
                     sent_time = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
                     time_diff = datetime.now() - sent_time
                     if time_diff.total_seconds() < 86400:  # 24 hours
-                        print(f"⏭️ Skipping recent duplicate: {article.get('title', '')[:50]}...")
+                        print(f"⏭️ Skipping duplicate: {article.get('title', '')[:50]}...")
                         continue
             except Exception as e:
                 print(f"❌ Error checking timestamp: {e}")
@@ -77,7 +75,13 @@ def main():
         # Send email alert
         print("📧 Sending email alert...")
         email_notifier = EmailNotifier()
-        success = email_notifier.send_alert(new_articles)
+        
+        # Add article hash to subject for debugging
+        first_article = new_articles[0]
+        article_hash = hash(first_article.get('title', '') + first_article.get('link', ''))
+        debug_subject = f"🚢 Global Logistics Alert - {datetime.now().strftime('%Y-%m-%d')} [Hash: {article_hash}]"
+        
+        success = email_notifier.send_alert(new_articles, subject=debug_subject)
         
         if success:
             print("✅ Global Logistics alert sent successfully")

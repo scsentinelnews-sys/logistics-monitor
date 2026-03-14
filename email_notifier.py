@@ -2,102 +2,112 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 from datetime import datetime
+import json
 
 class EmailNotifier:
     def __init__(self):
-        self.sender = os.getenv('LOGISTICS_EMAIL_USER')
-        self.password = os.getenv('LOGISTICS_EMAIL_PASSWORD')
-        self.recipient = os.getenv('LOGISTICS_EMAIL_RECIPIENT')
-        self.smtp_server = "smtp.gmail.com"
+        self.smtp_server = 'smtp.gmail.com'
         self.smtp_port = 587
-
-    def send_alert(self, articles):
-        """Send logistics alert with clean HTML table"""
-        if not articles or not self.sender or not self.password:
-            print("❌ Error: Missing credentials or articles.")
-            return False
-
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = f"🚢 Global Logistics Alert - {datetime.now().strftime('%Y-%m-%d')}"
-        msg["From"] = self.sender
-        msg["To"] = self.recipient
-
-        # Build HTML table
-        html_content = self.create_html_table(articles)
-        msg.attach(MIMEText(html_content, "html"))
-
-        try:
-            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-                server.starttls()
-                server.login(self.sender, self.password)
-                server.sendmail(self.sender, self.recipient, msg.as_string())
-            return True
-        except Exception as e:
-            print(f"❌ Failed to send email: {e}")
-            return False
-
+        self.sender = os.getenv('LOGISTICS_EMAIL_USER', '')
+        self.recipient = os.getenv('LOGISTICS_EMAIL_RECIPIENT', '')
+        self.password = os.getenv('LOGISTICS_EMAIL_PASSWORD', '')
+    
     def create_html_table(self, articles):
-        """Create clean HTML table for logistics articles"""
-        html = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Global Logistics Alert</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-                th { background-color: #f2f2f2; font-weight: bold; }
-                tr:hover { background-color: #f5f5f5; }
-                .header { background-color: #e8f4fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h1>🚢 Global Logistics Alert</h1>
-                <p><strong>Generated:</strong> """ + datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC') + """</p>
-                <p><strong>Articles:</strong> """ + str(len(articles)) + """</p>
-            </div>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>News Category</th>
-                        <th>News Content</th>
-                        <th>Source</th>
-                    </tr>
-                </thead>
-                <tbody>
+        """Create HTML table for email content"""
+        html_table = """
+        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+            <thead style="background-color: #f2f2f2; font-weight: bold;">
+                <tr>
+                    <th style="text-align: left; width: 5%;">S.no</th>
+                    <th style="text-align: left; width: 20%;">News Category</th>
+                    <th style="text-align: left; width: 55%;">News Content</th>
+                    <th style="text-align: left; width: 20%;">Source</th>
+                </tr>
+            </thead>
+            <tbody>
         """
         
         for i, article in enumerate(articles[:10], 1):  # Limit to 10 articles
-            html += f"""
+            html_table += f"""
                 <tr>
-                    <td>{i}</td>
-                    <td>{article.get('category', 'Logistics')}</td>
-                    <td>
-                        <strong>{article.get('title', '')}</strong><br>
-                        <small>{article.get('summary', '')}</small>
+                    <td style="vertical-align: top;">{i}</td>
+                    <td style="vertical-align: top;">{article['category']}</td>
+                    <td style="vertical-align: top;">
+                        <strong>{article['title']}</strong><br>
+                        <small>{article['summary']}</small><br>
+                        <span class="article-info">Source: {article['source']}</span>
                     </td>
-                    <td>{article.get('source', '').title()}</td>
+                    <td style="vertical-align: top;">
+                        <span class="source-verified">{article['source'].title()}</span>
+                    </td>
                 </tr>
             """
         
-        html += """
-                </tbody>
-            </table>
-            
-            <div class="footer">
-                <p>Generated on: """ + datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC') + """</p>
-                <p>Global Logistics Monitor V2 - Every 30 minutes</p>
-            </div>
-        </body>
-        </html>
+        html_table += """
+            </tbody>
+        </table>
         """
         
-        return html
+        return html_table
+    
+    def send_alert(self, articles, subject=None):
+        """Send email alert with articles"""
+        try:
+            if not articles:
+                print("❌ No articles to send")
+                return False
+            
+            if not self.sender or not self.recipient or not self.password:
+                print("❌ Missing email credentials")
+                return False
+            
+            # Create email
+            msg = MIMEMultipart()
+            
+            # Use custom subject or default
+            if subject:
+                email_subject = subject
+            else:
+                email_subject = f"🚢 Global Logistics Alert - {datetime.now().strftime('%Y-%m-%d')}"
+            
+            msg['Subject'] = email_subject
+            msg['From'] = self.sender
+            msg['To'] = self.recipient
+            
+            # Create HTML content
+            html_content = f"""
+            <html>
+            <body style="font-family: Arial, sans-serif; margin: 20px;">
+                <h2 style="color: #2c3e50;">🚢 Global Logistics Alert</h2>
+                <p style="color: #7f8c8d;">Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+                {self.create_html_table(articles)}
+                <hr style="border: none; border-top: 1px solid #ecf0f1; margin: 20px 0;">
+                <p style="color: #95a5a6; font-size: 12px;">
+                    This is an automated logistics monitoring system for educational purposes only.
+                    <br>Generated by Global Logistics Monitor V2
+                </p>
+            </body>
+            </html>
+            """
+            
+            msg.attach(MIMEText(html_content, 'html'))
+            
+            # Send email
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            server.starttls()
+            server.login(self.sender, self.password)
+            text = msg.as_string()
+            server.sendmail(self.sender, self.recipient, text)
+            server.quit()
+            
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error sending email: {e}")
+            return False
+
+# Global instance for backward compatibility
+email_notifier = EmailNotifier()

@@ -20,12 +20,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Cache bust
-        run: |
-          echo "🔧 CACHE BUST: $(date)"
-          echo "🔧 FORCING NEW WORKFLOW RECOGNITION"
-          echo "🔧 Node.js 24 compatibility enabled"
-
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -49,13 +43,8 @@ jobs:
           echo "LOGISTICS_EMAIL_USER: ${LOGISTICS_EMAIL_USER:+✅ Set} ${LOGISTICS_EMAIL_USER:-❌ Missing}"
           echo "LOGISTICS_EMAIL_PASSWORD: ${LOGISTICS_EMAIL_PASSWORD:+✅ Set} ${LOGISTICS_EMAIL_PASSWORD:-❌ Missing}"
           echo "LOGISTICS_EMAIL_RECIPIENT: ${LOGISTICS_EMAIL_RECIPIENT:+✅ Set} ${LOGISTICS_EMAIL_RECIPIENT:-❌ Missing}"
-          echo ""
-          echo "📋 EMAIL CREDENTIALS MASKED:"
-          echo "User: ${LOGISTICS_EMAIL_USER:0:5}..."
-          echo "Password: ${LOGISTICS_EMAIL_PASSWORD:+✅ Set length ${#LOGISTICS_EMAIL_PASSWORD}}"
-          echo "Recipient: ${LOGISTICS_EMAIL_RECIPIENT:0:5}..."
 
-      - name: Run Logistics Monitor with Debug
+      - name: Run Logistics Monitor
         env:
           LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
           LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
@@ -69,41 +58,6 @@ jobs:
           echo "🔐 Using GitHub Secrets for email credentials"
           echo ""
           python main.py
-
-      - name: Email System Debug
-        env:
-          LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
-          LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
-          LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-        run: |
-          echo "📧 EMAIL SYSTEM DEBUG"
-          echo "===================="
-          python -c "
-from email_notifier import EmailNotifier
-import os
-
-print('📋 Email Notifier Debug:')
-notifier = EmailNotifier()
-print(f'Sender: {notifier.sender}')
-print(f'Recipient: {notifier.recipient}')
-print(f'SMTP Server: {notifier.smtp_server}')
-print(f'SMTP Port: {notifier.smtp_port}')
-print(f'Password Set: {bool(notifier.password)}')
-
-# Test with mock article if real articles weren't found
-mock_articles = [{
-    'title': 'DEBUG TEST: Email System Verification',
-    'summary': 'This is a debug test to verify email system is working.',
-    'source': 'Debug System',
-    'published': '2026-03-14 18:59:00 UTC',
-    'category': 'Test'
-}]
-
-print('📧 Sending debug test email...')
-result = notifier.send_alert(mock_articles)
-print(f'📧 Debug email result: {\"✅ Success\" if result else \"❌ Failed\"}')
-"
 
       - name: Log Results
         run: |

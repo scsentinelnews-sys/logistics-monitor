@@ -1,37 +1,61 @@
+import time
 import os
 from datetime import datetime
-from news_fetcher import fetch_port_incident_news
-from email_system import send_port_incident_alert
+from typing import List, Dict
+from rss_parser import RSSFeedParser
+from email_system import send_logistics_alert  # Use clean table-only system
+from config import MONITORING_CONFIG
+
+class LogisticsMonitor:
+    def __init__(self):
+        self.parser = RSSFeedParser()
+        self.last_check_time = None
+    
+    def check_and_alert(self) -> None:
+        """Check for news and send alerts if needed"""
+        try:
+            print(f"[{datetime.now()}] Starting logistics monitoring check...")
+            
+            # Fetch and filter articles
+            articles = self.parser.fetch_and_filter_news()
+            
+            if articles:
+                print(f"Found {len(articles)} actionable intelligence items")
+                
+                # Send email alert using clean table-only system
+                success = send_logistics_alert(articles)
+                
+                if success:
+                    print(f"Alert sent successfully with {len(articles)} items")
+                else:
+                    print("Failed to send alert")
+            else:
+                print("No actionable intelligence found")
+        
+        except Exception as e:
+            print(f"❌ Error in check_and_alert: {e}")
+    
+    def run_once(self) -> None:
+        """Run monitoring check once"""
+        self.check_and_alert()
 
 def main():
-    """Main Port incident monitor function"""
-    print("🚨 Port Incident Monitor Started")
-    print(f"🕐 Scan time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
-    print("=" * 60)
+    """Main entry point"""
+    print("🌍 Global Logistics Intelligence System")
+    print("=" * 50)
     
-    # Fetch incident news
-    incidents = fetch_port_incident_news()
+    # Initialize monitor
+    monitor = LogisticsMonitor()
     
-    if incidents:
-        print(f"🚨 Found {len(incidents)} Port incidents/updates:")
-        for i, incident in enumerate(incidents, 1):
-            print(f"   {i}. {incident['title'][:60]}...")
-        
-        print()
-        print("📧 Sending Port incident alert...")
-        
-        # Send incident alert
-        success = send_port_incident_alert(incidents)
-        
-        if success:
-            print("✅ Port incident alert sent successfully")
-        else:
-            print("❌ Failed to send incident alert")
-    else:
-        print("✅ No new Port incidents detected")
+    # For GitHub Actions - run production mode directly
+    if os.getenv('GITHUB_ACTIONS'):
+        print("🤖 Running in GitHub Actions mode - production check")
+        monitor.check_and_alert()
+        return
     
-    print("=" * 60)
-    print(f"🕐 Scan completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    # Run single check
+    print("Running single check...")
+    monitor.run_once()
 
 if __name__ == "__main__":
     main()

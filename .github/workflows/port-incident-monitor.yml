@@ -11,10 +11,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5  # Updated to v5
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5  # Updated to v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -35,6 +35,7 @@ jobs:
           echo "📍 Target Infrastructure: Port Ruwais, Khalifa Port, Jebel Ali, L&S Fleet"
           echo "🚫 Exclusions: Cars, retail, food, consumer content"
           echo "📡 Using NewsAPI for comprehensive coverage"
+          
           cd port-incident-monitor
           python main.py
 

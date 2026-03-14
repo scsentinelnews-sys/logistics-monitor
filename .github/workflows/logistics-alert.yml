@@ -9,7 +9,7 @@ on:
         default: 'false'
         type: boolean
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/30 * * * * *'
 
 jobs:
   alert:
@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.event.workflow_run_id }}
+          key: sent-articles-LOGISTICS-MONITOR
           restore-keys: |
             sent-articles-
       
@@ -52,17 +52,8 @@ jobs:
           if [ -f sent_articles.json ]; then
             echo "📋 sent_articles.json content:"
             cat sent_articles.json
-            echo "📋 Article count: $(python -c "
-import json
-try:
-    with open('sent_articles.json', 'r') as f:
-        data = json.load(f)
-        print(f'✅ Article count: {len(data)}')
-except:
-    print('❌ Error reading JSON')
-            "
           fi
-          echo "🔍 Cache key: sent-articles-${{ github.event.workflow_run_id }}"
+          echo "🔍 Cache key: sent-articles-LOGISTICS-MONITOR"
           echo "🔍 GitHub run number: ${{ github.run_number }}"
           echo "🔍 Workflow run ID: ${{ github.event.workflow_run_id }}"
           echo "🔍 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: $FORCE_JAVASCRIPT_ACTIONS_TO_NODE24"
@@ -73,4 +64,4 @@ except:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.event.workflow_run_id }
+          key: sent-articles-LOGISTICS-MONITOR

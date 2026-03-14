@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.run_number }}
+          key: sent-articles-LOGISTICS-MONITOR
           restore-keys: |
             sent-articles-
       
@@ -53,8 +53,8 @@ jobs:
             echo "📋 sent_articles.json content:"
             cat sent_articles.json
           fi
-          echo "🔍 Cache key: sent-articles-${{ github.run_number }}"
-          echo "🔍 GitHub run number: ${ github.run_number }"
+          echo "🔍 Cache key: sent-articles-LOGISTICS-MONITOR"
+          echo "🔍 GitHub run number: ${{ github.run_number }}"
           echo "🔍 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: $FORCE_JAVASCRIPT_ACTIONS_TO_NODE24"
           echo "🔍 ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: $ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
           python main.py
@@ -63,4 +63,4 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.run_number }}
+          key: sent-articles-LOGISTICS-MONITOR

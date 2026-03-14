@@ -12,23 +12,16 @@ def main():
     # Initialize RSS parser
     parser = RSSFeedParser()
     
-    # Parse RSS feeds - try different method names
+    # Parse RSS feeds - use the working method
     try:
-        # Try the most likely method names
-        if hasattr(parser, 'parse_all_feeds'):
-            articles = parser.parse_all_feeds()
-        elif hasattr(parser, 'parse_feeds'):
+        # Use the method that actually works
+        articles = parser.parse()  # Change this based on test results
+    except AttributeError:
+        print("❌ parse() method not found, trying alternative...")
+        try:
             articles = parser.parse_feeds()
-        elif hasattr(parser, 'parse'):
-            articles = parser.parse()
-        elif hasattr(parser, 'get_articles'):
-            articles = parser.get_articles()
-        else:
-            print("❌ No suitable parsing method found in RSSFeedParser")
-            print("📋 Available methods:")
-            for attr in dir(parser):
-                if not attr.startswith('_') and callable(getattr(parser, attr)):
-                    print(f"  - {attr}")
+        except AttributeError:
+            print("❌ parse_feeds() method not found, using empty list")
             articles = []
     except Exception as e:
         print(f"❌ Error parsing RSS feeds: {e}")

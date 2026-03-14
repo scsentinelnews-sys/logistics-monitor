@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from rss_parser import RSSFeedParser
 from email_notifier import EmailNotifier
 
@@ -21,6 +21,7 @@ def save_sent_articles(sent_articles):
     try:
         with open('sent_articles.json', 'w') as f:
             json.dump(sent_articles, f, indent=2)
+        print(f"💾 Saved {len(sent_articles)} sent articles")
     except Exception as e:
         print(f"❌ Error saving sent_articles: {e}")
 
@@ -41,21 +42,32 @@ def main():
     articles = parser.fetch_and_filter_news()
     print(f"📊 Found {len(articles)} relevant logistics articles")
     
-    # Filter out duplicates
+    # Filter out duplicates using a longer time window
     new_articles = []
     for article in articles:
         article_id = article.get('title', '') + article.get('link', '')
         article_hash = hash(article_id)
         
-        if article_hash not in sent_articles:
-            new_articles.append(article)
-            sent_articles[article_hash] = {
-                'title': article.get('title', ''),
-                'link': article.get('link', ''),
-                'timestamp': datetime.now().isoformat()
-            }
-        else:
-            print(f"⏭️ Skipping duplicate: {article.get('title', '')[:50]}...")
+        # Check if article was sent in the last 24 hours
+        if article_hash in sent_articles:
+            try:
+                timestamp_str = sent_articles[article_hash].get('timestamp', '')
+                if timestamp_str:
+                    sent_time = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                    time_diff = datetime.now() - sent_time
+                    if time_diff.total_seconds() < 86400:  # 24 hours
+                        print(f"⏭️ Skipping recent duplicate: {article.get('title', '')[:50]}...")
+                        continue
+            except Exception as e:
+                print(f"❌ Error checking timestamp: {e}")
+        
+        # Article is new or older than 24 hours
+        new_articles.append(article)
+        sent_articles[article_hash] = {
+            'title': article.get('title', ''),
+            'link': article.get('link', ''),
+            'timestamp': datetime.now().isoformat()
+        }
     
     print(f"📊 After duplicate check: {len(new_articles)} new articles")
     
@@ -71,7 +83,6 @@ def main():
             print("✅ Global Logistics alert sent successfully")
             # Save updated sent articles
             save_sent_articles(sent_articles)
-            print(f"💾 Saved {len(sent_articles)} total sent articles")
         else:
             print("❌ Failed to send alert")
     else:

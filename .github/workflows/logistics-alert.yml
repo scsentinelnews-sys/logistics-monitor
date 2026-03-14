@@ -20,13 +20,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Cache sent articles
-        uses: actions/cache@v3
+      - name: Download sent articles
+        uses: actions/download-artifact@v3
         with:
-          path: sent_articles.json
-          key: sent-articles-${{ github.run_number }}
-          restore-keys: |
-            sent-articles-
+          name: sent-articles
+          path: .
+        continue-on-error: true
       
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -53,8 +52,9 @@ jobs:
           fi
           python main.py
       
-      - name: Save cache
-        uses: actions/cache@v3
+      - name: Upload sent articles
+        uses: actions/upload-artifact@v3
         with:
+          name: sent-articles
           path: sent_articles.json
-          key: sent-articles-${{ github.run_number }}
+          retention-days: 30

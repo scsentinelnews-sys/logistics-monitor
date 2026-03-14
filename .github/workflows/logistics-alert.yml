@@ -16,16 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: false
     steps:
       - name: Checkout
         uses: actions/checkout@v5
       
-      - name: Download sent articles
-        uses: actions/download-artifact@v4
+      - name: Cache sent articles
+        uses: actions/cache@v3
         with:
-          name: sent-articles
-          path: .
-        continue-on-error: true
+          path: sent_articles.json
+          key: sent-articles-${{ github.run_id }}
+          restore-keys: |
+            sent-articles
       
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -41,20 +43,22 @@ jobs:
           LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
           LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: false
         run: |
           echo "🚢 Logistics Alert Started"
           echo "🕐 Current time: $(date)"
           echo "🔍 Checking for existing sent_articles.json:"
-          ls -la sent_articles.json || echo "❌ No sent_articles.json found"
+          ls -la sent_articles.json || echo "❌ No sent_articles.json found (first run)"
           if [ -f sent_articles.json ]; then
             echo "📋 sent_articles.json content:"
             cat sent_articles.json
           fi
+          echo "🔍 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: $FORCE_JAVASCRIPT_ACTIONS_TO_NODE24"
+          echo "🔍 ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: $ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
           python main.py
       
-      - name: Upload sent articles
-        uses: actions/upload-artifact@v4
+      - name: Save cache
+        uses: actions/cache@v3
         with:
-          name: sent-articles
           path: sent_articles.json
-          retention-days: 30
+          key: sent-articles-${{ github.run_id }}

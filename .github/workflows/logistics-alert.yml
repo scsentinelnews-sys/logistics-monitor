@@ -25,9 +25,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.run_id }}
+          key: sent-articles-${{ github.run_number }}
           restore-keys: |
-            sent-articles
+            sent-articles-
       
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -53,6 +53,8 @@ jobs:
             echo "📋 sent_articles.json content:"
             cat sent_articles.json
           fi
+          echo "🔍 Cache key: sent-articles-${{ github.run_number }}"
+          echo "🔍 GitHub run number: ${ github.run_number }"
           echo "🔍 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: $FORCE_JAVASCRIPT_ACTIONS_TO_NODE24"
           echo "🔍 ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: $ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION"
           python main.py
@@ -61,4 +63,4 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles-${{ github.run_id }}
+          key: sent-articles-${{ github.run_number }}

@@ -20,6 +20,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
       
+      - name: Cache sent articles
+        uses: actions/cache@v3
+        with:
+          path: sent_articles.json
+          key: sent-articles
+          restore-keys: |
+            sent-articles-
+      
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -38,3 +46,9 @@ jobs:
           echo "🚢 Logistics Alert Started"
           echo "🕐 Current time: $(date)"
           python main.py
+      
+      - name: Save cache
+        uses: actions/cache@v3
+        with:
+          path: sent_articles.json
+          key: sent-articles

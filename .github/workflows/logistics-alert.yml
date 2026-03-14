@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles
+          key: sent-articles-${{ github.run_number }}
           restore-keys: |
             sent-articles-
       
@@ -45,10 +45,16 @@ jobs:
         run: |
           echo "🚢 Logistics Alert Started"
           echo "🕐 Current time: $(date)"
+          echo "🔍 Checking for existing sent_articles.json:"
+          ls -la sent_articles.json || echo "❌ No sent_articles.json found"
+          if [ -f sent_articles.json ]; then
+            echo "📋 sent_articles.json content:"
+            cat sent_articles.json
+          fi
           python main.py
       
       - name: Save cache
         uses: actions/cache@v3
         with:
           path: sent_articles.json
-          key: sent-articles
+          key: sent-articles-${{ github.run_number }}

@@ -1,10 +1,9 @@
-name: Logistics Monitor V2
+name: 🚢 Global Logistics Alert V2
 
 on:
   schedule:
     - cron: '*/30 * * * *'  # Every 30 minutes
-  workflow_dispatch:  # Manual trigger still available
-  # Add push trigger to activate schedule
+  workflow_dispatch:  # Allows manual run
   push:
     branches: [ main ]
 
@@ -13,38 +12,35 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        pip install feedparser requests schedule python-dotenv pytz beautifulsoup4
-        
-    - name: Run Production Monitor
-      env:
-        LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
-        LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
-        LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_USER }}
-        GITHUB_ACTIONS: "true"
-      run: |
-        echo "🤖 Starting production logistics monitor at $(date)"
-        echo "📧 Email configured for recipient"
-        echo "🔥 Ruwais Abu Dhabi UAE attack detection enabled"
-        echo "⏰ Schedule: Every 30 minutes"
-        
-        python main.py
-        
-        echo "✅ Production monitor completed at $(date)"
-        
-    - name: Log Summary
-      run: |
-        echo "📊 Summary: Logistics monitor completed successfully"
-        echo "📧 Email will be sent only when real logistics intelligence is found"
-        echo "🔥 Ruwais Abu Dhabi UAE attacks will always be caught"
-        echo "🎯 No email = No real logistics crises (correct behavior)"
-        echo "⏰ Next run: $(date -d '+30 minutes' '+%H:%M')"
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Logistics Monitor
+        env:
+          LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
+          LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
+          LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        run: |
+          echo "🚢 Global Logistics Alert V2 Started"
+          echo "🕐 Current time: $(date)"
+          echo "🎯 Monitoring ADNOC/Borouge Global Logistics"
+          echo "📡 Using RSS feeds for comprehensive coverage"
+          echo "🔐 Using GitHub Secrets for email credentials"
+          echo ""
+          python main.py
+
+      - name: Log Results
+        run: |
+          echo "📊 Logistics monitor completed at $(date)"
+          echo "🚢 Global Logistics: Monitored and reported"
+          echo "📍 Next scan in 30 minutes"

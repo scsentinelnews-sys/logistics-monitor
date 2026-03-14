@@ -8,10 +8,14 @@ on:
         required: false
         default: 'false'
         type: boolean
+  schedule:
+    - cron: '*/30 * * * *'
 
 jobs:
   alert:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v5

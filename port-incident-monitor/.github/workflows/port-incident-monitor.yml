@@ -1,0 +1,31 @@
+name: 🚨 Port Incident Monitor
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Port Incident Monitor
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+          LOGISTICS_EMAIL_USER: ${{ secrets.LOGISTICS_EMAIL_USER }}
+          LOGISTICS_EMAIL_PASSWORD: ${{ secrets.LOGISTICS_EMAIL_PASSWORD }}
+          LOGISTICS_EMAIL_RECIPIENT: ${{ secrets.LOGISTICS_EMAIL_RECIPIENT }}
+        run: |
+          cd port-incident-monitor
+          python main.py
